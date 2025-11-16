@@ -1,6 +1,7 @@
-const express = require('express')
-const cors = require('cors')
-const dotenv = require('dotenv')
+import express from 'express'
+import cors from 'cors'
+import dotenv from 'dotenv'
+import { errorHandler, NotFoundError } from './middlewares/errorHandler.js'
 
 dotenv.config()
 
@@ -17,4 +18,10 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' })
 })
 
-module.exports = app
+app.get('/test-error', (req, res, next) => {
+  next(new NotFoundError('Test resource not found'))
+})
+
+app.use(errorHandler)
+
+export default app
