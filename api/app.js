@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import { errorHandler, NotFoundError } from './middlewares/errorHandler.js'
+import hotelRoutes from './routes/hotelRoutes.js'
 
 dotenv.config()
 
@@ -21,6 +22,8 @@ app.get('/health', (req, res) => {
 app.get('/test-error', (req, res, next) => {
   next(new NotFoundError('Test resource not found'))
 })
+
+app.use('/api/hotels', hotelRoutes)
 
 app.use(errorHandler)
 
