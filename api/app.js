@@ -3,6 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import { errorHandler, NotFoundError } from './middlewares/errorHandler.js'
 import hotelRoutes from './routes/hotelRoutes.js'
+import bookingRoutes from './routes/bookingRoutes.js'
 
 dotenv.config()
 
@@ -24,6 +25,7 @@ app.get('/test-error', (req, res, next) => {
 })
 
 app.use('/api/hotels', hotelRoutes)
+app.use('/api/bookings', bookingRoutes)
 
 app.use(errorHandler)
 
