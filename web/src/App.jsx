@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout'
 import HomePage from './pages/HomePage'
 import SearchResultsPage from './pages/SearchResultsPage'
 import HotelDetailsPage from './pages/HotelDetailsPage'
@@ -7,13 +8,15 @@ import ConfirmationPage from './pages/ConfirmationPage'
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/search" element={<SearchResultsPage />} />
-      <Route path="/hotel/:id" element={<HotelDetailsPage />} />
-      <Route path="/booking/:hotelId/:roomId" element={<BookingPage />} />
-      <Route path="/confirmation/:bookingRef" element={<ConfirmationPage />} />
-    </Routes>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/search" element={<SearchResultsPage />} />
+        <Route path="/hotel/:id" element={<HotelDetailsPage />} />
+        <Route path="/booking/:hotelId/:roomId" element={<BookingPage />} />
+        <Route path="/confirmation/:bookingRef" element={<ConfirmationPage />} />
+      </Routes>
+    </Layout>
   )
 }
 
