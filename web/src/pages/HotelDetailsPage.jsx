@@ -1,7 +1,242 @@
+import { useState, useEffect } from 'react'
+import { useParams, useSearchParams, Link } from 'react-router-dom'
+import { getHotel } from '@/services/api'
+import SearchBar from '@/components/SearchBar'
+
 function HotelDetailsPage() {
+  const { id } = useParams()
+  const [searchParams] = useSearchParams()
+  const [hotel, setHotel] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [selectedImage, setSelectedImage] = useState(0)
+
+  const guests = searchParams.get('guests') || 1
+  const checkIn = searchParams.get('checkIn') || ''
+  const checkOut = searchParams.get('checkOut') || ''
+
+  useEffect(() => {
+    async function fetchHotel() {
+      try {
+        setLoading(true)
+        const data = await getHotel(id)
+        setHotel(data)
+      } catch (error) {
+        console.error('Failed to fetch hotel:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchHotel()
+  }, [id])
+
+  const scrollToRooms = () => {
+    const roomsSection = document.getElementById('room-options')
+    if (roomsSection) {
+      roomsSection.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-light-gray">
+        <div className="bg-primary px-4 py-6">
+          <div className="mx-auto max-w-7xl">
+            <SearchBar initialValues={{ guests: Number(guests), checkIn, checkOut }} />
+          </div>
+        </div>
+        <div className="flex min-h-[400px] items-center justify-center">
+          <div className="text-center">
+            <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+            <p className="mt-4 text-gray-text">Loading hotel details...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!hotel) {
+    return (
+      <div className="min-h-screen bg-light-gray">
+        <div className="bg-primary px-4 py-6">
+          <div className="mx-auto max-w-7xl">
+            <SearchBar initialValues={{ guests: Number(guests), checkIn, checkOut }} />
+          </div>
+        </div>
+        <div className="flex min-h-[400px] items-center justify-center">
+          <div className="text-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="mx-auto h-16 w-16 text-gray-text"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="m15 9-6 6" />
+              <path d="m9 9 6 6" />
+            </svg>
+            <p className="mt-4 text-lg font-medium text-dark">Hotel not found</p>
+            <Link to="/" className="mt-2 inline-block text-primary hover:underline">
+              Back to Home
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div>
-      <h1>Hotel Details Page</h1>
+    <div className="min-h-screen bg-light-gray">
+      <div className="bg-primary px-4 py-6">
+        <div className="mx-auto max-w-7xl">
+          <SearchBar initialValues={{ guests: Number(guests), checkIn, checkOut }} />
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-7xl px-4 py-6">
+        <nav className="mb-6 text-sm">
+          <Link to="/" className="text-primary hover:underline">Home</Link>
+          <span className="mx-2 text-gray-text">&gt;</span>
+          <span className="text-gray-text">Cordova, Cebu</span>
+          <span className="mx-2 text-gray-text">&gt;</span>
+          <span className="text-dark">{hotel.name}</span>
+        </nav>
+
+        <div className="mb-6 flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-dark md:text-3xl">{hotel.name}</h1>
+          <button
+            onClick={scrollToRooms}
+            className="rounded-full bg-primary px-6 py-2 font-medium text-white transition-colors hover:bg-[#2563EB]"
+          >
+            Reserve
+          </button>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <div className="overflow-hidden rounded-xl bg-white shadow-md">
+              <div className="aspect-video w-full">
+                <img
+                  src={hotel.images?.[selectedImage] || 'https://placehold.co/800x450?text=No+Image'}
+                  alt={hotel.name}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              {hotel.images && hotel.images.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto p-4">
+                  {hotel.images.map((image, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedImage(index)}
+                      className={`h-16 w-24 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
+                        selectedImage === index ? 'border-primary' : 'border-transparent hover:border-gray-300'
+                      }`}
+                    >
+                      <img
+                        src={image}
+                        alt={`${hotel.name} ${index + 1}`}
+                        className="h-full w-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="mt-6 rounded-xl bg-white p-6 shadow-md">
+              <h2 className="mb-4 text-xl font-semibold text-dark">About this property</h2>
+              <p className="text-gray-text">{hotel.description}</p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="overflow-hidden rounded-xl bg-white shadow-md">
+              <div className="flex h-48 items-center justify-center bg-gray-100">
+                <div className="text-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="mx-auto h-12 w-12 text-gray-text"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  <p className="mt-2 text-sm text-gray-text">Map</p>
+                  <p className="text-xs text-gray-text">Cordova, Cebu</p>
+                </div>
+              </div>
+              <div className="p-4">
+                <p className="text-sm text-gray-text">{hotel.address}</p>
+                <button className="mt-2 flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  Show on map
+                </button>
+              </div>
+            </div>
+
+            <div className="rounded-xl bg-white p-6 shadow-md">
+              <h3 className="mb-4 text-lg font-semibold text-dark">Property Highlights</h3>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-rating-blue text-sm font-bold text-white">
+                  {hotel.rating?.toFixed(1) || 'N/A'}
+                </div>
+                <span className="text-sm font-medium text-dark">
+                  {hotel.rating >= 4.5 ? 'Exceptional' : hotel.rating >= 4 ? 'Very Good' : hotel.rating >= 3.5 ? 'Good' : 'Fair'}
+                </span>
+              </div>
+              {hotel.amenities && hotel.amenities.length > 0 && (
+                <div>
+                  <h4 className="mb-2 text-sm font-medium text-dark">Amenities</h4>
+                  <ul className="space-y-2">
+                    {hotel.amenities.map((amenity, index) => (
+                      <li key={index} className="flex items-center gap-2 text-sm text-gray-text">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 text-success"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                        {amenity}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div id="room-options" className="mt-8">
+          <h2 className="mb-4 text-xl font-semibold text-dark">Room Options</h2>
+          <p className="text-gray-text">Room options will be displayed here.</p>
+        </div>
+      </div>
     </div>
   )
 }
