@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useSearchParams, Link } from 'react-router-dom'
 import { getHotel } from '@/services/api'
 import SearchBar from '@/components/SearchBar'
+import RoomCard from '@/components/RoomCard'
 
 function HotelDetailsPage() {
   const { id } = useParams()
@@ -234,7 +235,72 @@ function HotelDetailsPage() {
 
         <div id="room-options" className="mt-8">
           <h2 className="mb-4 text-xl font-semibold text-dark">Room Options</h2>
-          <p className="text-gray-text">Room options will be displayed here.</p>
+          {hotel.rooms && hotel.rooms.length > 0 ? (
+            (() => {
+              const guestCount = Number(guests) || 1
+              const filteredRooms = hotel.rooms.filter(room => room.maxGuests >= guestCount)
+
+              if (filteredRooms.length === 0) {
+                return (
+                  <div className="rounded-xl bg-white p-8 text-center shadow-md">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="mx-auto h-12 w-12 text-gray-text"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M3 7v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7" />
+                      <path d="M21 7v-.5a2.5 2.5 0 0 0-2.5-2.5h-13A2.5 2.5 0 0 0 3 6.5V7" />
+                      <path d="M3 7h18" />
+                    </svg>
+                    <p className="mt-4 text-lg font-medium text-dark">No rooms available for {guestCount} guest{guestCount > 1 ? 's' : ''}</p>
+                    <p className="mt-1 text-sm text-gray-text">Try adjusting your guest count to see available rooms.</p>
+                  </div>
+                )
+              }
+
+              return (
+                <div className="space-y-4">
+                  <p className="text-sm text-gray-text">
+                    {filteredRooms.length} room{filteredRooms.length > 1 ? 's' : ''} available for {guestCount} guest{guestCount > 1 ? 's' : ''}
+                  </p>
+                  {filteredRooms.map(room => (
+                    <RoomCard
+                      key={room.id}
+                      room={room}
+                      hotelId={id}
+                      guests={guestCount}
+                      checkIn={checkIn}
+                      checkOut={checkOut}
+                    />
+                  ))}
+                </div>
+              )
+            })()
+          ) : (
+            <div className="rounded-xl bg-white p-8 text-center shadow-md">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="mx-auto h-12 w-12 text-gray-text"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M3 7v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7" />
+                <path d="M21 7v-.5a2.5 2.5 0 0 0-2.5-2.5h-13A2.5 2.5 0 0 0 3 6.5V7" />
+                <path d="M3 7h18" />
+              </svg>
+              <p className="mt-4 text-lg font-medium text-dark">No rooms available</p>
+              <p className="mt-1 text-sm text-gray-text">This hotel has no rooms listed at the moment.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
