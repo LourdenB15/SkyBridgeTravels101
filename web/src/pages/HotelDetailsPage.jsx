@@ -3,6 +3,7 @@ import { useParams, useSearchParams, Link } from 'react-router-dom'
 import { getHotel } from '@/services/api'
 import SearchBar from '@/components/SearchBar'
 import RoomCard from '@/components/RoomCard'
+import Map from '@/components/Map'
 
 function HotelDetailsPage() {
   const { id } = useParams()
@@ -155,43 +156,15 @@ function HotelDetailsPage() {
 
           <div className="space-y-6">
             <div className="overflow-hidden rounded-xl bg-white shadow-md">
-              <div className="flex h-48 items-center justify-center bg-gray-100">
-                <div className="text-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="mx-auto h-12 w-12 text-gray-text"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
-                  <p className="mt-2 text-sm text-gray-text">Map</p>
-                  <p className="text-xs text-gray-text">Cordova, Cebu</p>
-                </div>
+              <div className="h-48 z-0 relative">
+                <Map
+                  latitude={hotel.latitude}
+                  longitude={hotel.longitude}
+                  hotelName={hotel.name}
+                />
               </div>
               <div className="p-4">
                 <p className="text-sm text-gray-text">{hotel.address}</p>
-                <button className="mt-2 flex items-center gap-1 text-sm font-medium text-primary hover:underline">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
-                  Show on map
-                </button>
               </div>
             </div>
 
