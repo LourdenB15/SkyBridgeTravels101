@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import { errorHandler } from './middlewares/errorHandler.js'
+import { clerkMiddleware, requireAuthentication } from './middlewares/auth.js'
 import hotelRoutes from './routes/hotelRoutes.js'
 import bookingRoutes from './routes/bookingRoutes.js'
 
@@ -16,8 +17,18 @@ app.use(cors({
   credentials: true
 }))
 
+app.use(clerkMiddleware())
+
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' })
+})
+
+app.get('/api/auth/test', requireAuthentication, (req, res) => {
+  res.json({
+    message: 'Authentication successful',
+    userId: req.auth.userId,
+    sessionId: req.auth.sessionId
+  })
 })
 
 app.use('/api/hotels', hotelRoutes)
