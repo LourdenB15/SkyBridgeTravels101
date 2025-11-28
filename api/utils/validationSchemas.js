@@ -3,7 +3,6 @@ import { z } from 'zod'
 export const createBookingSchema = z.object({
   hotelId: z.string().uuid({ message: 'Invalid hotel ID format' }),
   roomId: z.string().uuid({ message: 'Invalid room ID format' }),
-  clerkUserId: z.string().min(1, { message: 'User ID is required' }),
   guestFirstName: z.string().min(1, { message: 'First name is required' }),
   guestLastName: z.string().min(1, { message: 'Last name is required' }),
   guestEmail: z.string().email({ message: 'Invalid email format' }),

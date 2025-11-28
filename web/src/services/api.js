@@ -30,13 +30,26 @@ export async function searchHotels(guests, sort = 'relevance', location) {
   return response.data
 }
 
-export async function createBooking(data) {
-  const response = await api.post('/bookings', data)
+export async function createBooking(data, token) {
+  const response = await api.post('/bookings', data, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
   return response.data
 }
 
 export async function getBookingByRef(bookingRef) {
   const response = await api.get(`/bookings/ref/${bookingRef}`)
+  return response.data
+}
+
+export async function getUserBookings(token) {
+  const response = await api.get('/bookings/user', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
   return response.data
 }
 
