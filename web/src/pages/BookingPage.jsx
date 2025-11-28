@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useSearchParams, Link } from 'react-router-dom'
 import { getHotel } from '@/services/api'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import GuestForm from '@/components/GuestForm'
 
 function BookingPage() {
   const { hotelId, roomId } = useParams()
@@ -14,6 +15,23 @@ function BookingPage() {
   const [room, setRoom] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+
+  const [guestInfo, setGuestInfo] = useState({
+    firstName: '',
+    lastName: '',
+    email: ''
+  })
+  const [isFormValid, setIsFormValid] = useState(false)
+  const [validateForm, setValidateForm] = useState(null)
+
+  const handleGuestValuesChange = useCallback((values) => {
+    setGuestInfo(values)
+  }, [])
+
+  const handleValidationChange = useCallback((isValid, validateFn) => {
+    setIsFormValid(isValid)
+    setValidateForm(() => validateFn)
+  }, [])
 
   useEffect(() => {
     async function fetchHotelData() {
@@ -132,38 +150,10 @@ function BookingPage() {
               <CardTitle className="text-lg">Guest Information</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-dark mb-1">
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter your first name"
-                    className="w-full px-4 py-3 border-2 border-dark rounded-xl focus:border-primary focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-dark mb-1">
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter your last name"
-                    className="w-full px-4 py-3 border-2 border-dark rounded-xl focus:border-primary focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-dark mb-1">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="Enter your email address"
-                    className="w-full px-4 py-3 border-2 border-dark rounded-xl focus:border-primary focus:outline-none"
-                  />
-                </div>
-              </div>
+              <GuestForm
+                onValuesChange={handleGuestValuesChange}
+                onValidationChange={handleValidationChange}
+              />
             </CardContent>
           </Card>
 
@@ -243,6 +233,14 @@ function BookingPage() {
             <div className="mt-6 pt-6 border-t">
               <button
                 type="button"
+                onClick={() => {
+                  if (validateForm) {
+                    const isValid = validateForm()
+                    if (isValid) {
+                      console.log('Form is valid, guest info:', guestInfo)
+                    }
+                  }
+                }}
                 className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 px-6 rounded-full transition-colors"
               >
                 Confirm Booking
