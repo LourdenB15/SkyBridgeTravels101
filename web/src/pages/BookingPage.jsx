@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useParams, useSearchParams, Link } from 'react-router-dom'
-import { getHotel } from '@/services/api'
+import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '@clerk/clerk-react'
+import { getHotel, createBooking } from '@/services/api'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import GuestForm from '@/components/GuestForm'
 import OrderSummary from '@/components/OrderSummary'
@@ -8,6 +9,8 @@ import OrderSummary from '@/components/OrderSummary'
 function BookingPage() {
   const { hotelId, roomId } = useParams()
   const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
+  const { getToken } = useAuth()
   const guests = searchParams.get('guests') || '1'
   const checkIn = searchParams.get('checkIn') || ''
   const checkOut = searchParams.get('checkOut') || ''
@@ -16,6 +19,7 @@ function BookingPage() {
   const [room, setRoom] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
 
   const [guestInfo, setGuestInfo] = useState({
     firstName: '',
@@ -56,12 +60,54 @@ function BookingPage() {
     fetchHotelData()
   }, [hotelId, roomId])
 
-  const handleConfirmBooking = () => {
+  const calculateNights = () => {
+    if (!checkIn || !checkOut) return 1
+    const start = new Date(checkIn)
+    const end = new Date(checkOut)
+    const diff = Math.ceil((end - start) / (1000 * 60 * 60 * 24))
+    return diff > 0 ? diff : 1
+  }
+
+  const handleConfirmBooking = async () => {
     if (validateForm) {
       const isValid = validateForm()
-      if (isValid) {
-        console.log('Form is valid, guest info:', guestInfo)
+      if (!isValid) {
+        return
       }
+    }
+
+    try {
+      setSubmitting(true)
+      setError(null)
+
+      const token = await getToken()
+      if (!token) {
+        setError('Authentication required. Please sign in.')
+        return
+      }
+
+      const nights = calculateNights()
+      const roomPrice = Number(room.pricePerNight)
+
+      const bookingData = {
+        hotelId,
+        roomId,
+        guestFirstName: guestInfo.firstName,
+        guestLastName: guestInfo.lastName,
+        guestEmail: guestInfo.email,
+        checkInDate: checkIn,
+        checkOutDate: checkOut,
+        numberOfGuests: Number(guests),
+        roomPrice,
+        nights
+      }
+
+      const result = await createBooking(bookingData, token)
+      navigate(`/confirmation/${result.bookingRef}`)
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to create booking. Please try again.')
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -76,7 +122,7 @@ function BookingPage() {
     )
   }
 
-  if (error || !hotel || !room) {
+  if (!hotel || !room) {
     return (
       <div className="min-h-screen bg-light-gray flex items-center justify-center">
         <Card className="w-full max-w-md">
@@ -157,6 +203,17 @@ function BookingPage() {
           </Card>
         </div>
 
+        {error && !loading && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p className="text-red-700 text-sm">{error}</p>
+            </div>
+          </div>
+        )}
+
         <OrderSummary
           pricePerNight={room.pricePerNight}
           checkIn={checkIn}
@@ -164,6 +221,7 @@ function BookingPage() {
           guests={guests}
           roomName={room.name}
           onConfirm={handleConfirmBooking}
+          isSubmitting={submitting}
         />
       </div>
     </div>
