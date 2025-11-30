@@ -51,3 +51,14 @@ export const updateStatus = async (id, status) => {
     }
   })
 }
+
+export const updatePaymentId = async (id, paymentId) => {
+  return prisma.booking.update({
+    where: { id },
+    data: { paymentId },
+    include: {
+      hotel: true,
+      room: true
+    }
+  })
+}

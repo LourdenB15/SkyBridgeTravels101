@@ -5,6 +5,7 @@ import { errorHandler } from './middlewares/errorHandler.js'
 import { clerkMiddleware, requireAuthentication } from './middlewares/auth.js'
 import hotelRoutes from './routes/hotelRoutes.js'
 import bookingRoutes from './routes/bookingRoutes.js'
+import paymentRoutes from './routes/paymentRoutes.js'
 
 dotenv.config()
 
@@ -33,6 +34,7 @@ app.get('/api/auth/test', requireAuthentication, (req, res) => {
 
 app.use('/api/hotels', hotelRoutes)
 app.use('/api/bookings', bookingRoutes)
+app.use('/api/payments', paymentRoutes)
 
 app.use(errorHandler)
 
