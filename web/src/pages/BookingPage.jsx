@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom'
+import { useParams, useSearchParams, Link } from 'react-router-dom'
 import { useAuth } from '@clerk/clerk-react'
-import { getHotel, createBooking } from '@/services/api'
+import { getHotel, createBooking, createPaymentInvoice } from '@/services/api'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import GuestForm from '@/components/GuestForm'
 import OrderSummary from '@/components/OrderSummary'
@@ -9,7 +9,6 @@ import OrderSummary from '@/components/OrderSummary'
 function BookingPage() {
   const { hotelId, roomId } = useParams()
   const [searchParams] = useSearchParams()
-  const navigate = useNavigate()
   const { getToken } = useAuth()
   const guests = searchParams.get('guests') || '1'
   const checkIn = searchParams.get('checkIn') || ''
@@ -103,10 +102,12 @@ function BookingPage() {
       }
 
       const result = await createBooking(bookingData, token)
-      navigate(`/confirmation/${result.bookingRef}`)
+
+      const paymentResult = await createPaymentInvoice(result.id, token)
+
+      window.location.href = paymentResult.invoiceUrl
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to create booking. Please try again.')
-    } finally {
       setSubmitting(false)
     }
   }

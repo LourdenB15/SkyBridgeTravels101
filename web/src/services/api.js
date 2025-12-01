@@ -53,4 +53,13 @@ export async function getUserBookings(token) {
   return response.data
 }
 
+export async function createPaymentInvoice(bookingId, token) {
+  const response = await api.post('/payments/create-invoice', { bookingId }, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
 export default api
