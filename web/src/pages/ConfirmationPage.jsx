@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { getBookingByRef } from '@/services/api'
-import { Check, Loader2, XCircle, Calendar, Home } from 'lucide-react'
+import { useAuth } from '@clerk/clerk-react'
+import { getBookingByRef, createPaymentInvoice } from '@/services/api'
+import { Check, Loader2, XCircle, Calendar, Home, Clock, CreditCard, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 function ConfirmationPage() {
   const { bookingRef } = useParams()
+  const { getToken } = useAuth()
   const [booking, setBooking] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [retrying, setRetrying] = useState(false)
 
   useEffect(() => {
     async function fetchBooking() {
@@ -27,6 +30,78 @@ function ConfirmationPage() {
       fetchBooking()
     }
   }, [bookingRef])
+
+  const handleRetryPayment = async () => {
+    try {
+      setRetrying(true)
+      const token = await getToken()
+      if (!token) {
+        setError('Please sign in to retry payment')
+        setRetrying(false)
+        return
+      }
+      const paymentResult = await createPaymentInvoice(booking.id, token)
+      window.location.href = paymentResult.invoiceUrl
+    } catch (err) {
+      setError('Failed to create payment. Please try again.')
+      setRetrying(false)
+    }
+  }
+
+  const getStatusConfig = (status) => {
+    switch (status) {
+      case 'confirmed':
+        return {
+          icon: Check,
+          iconBg: 'bg-success',
+          badge: 'Payment Successful',
+          badgeBg: 'bg-success',
+          badgeText: 'text-white',
+          title: 'Booking Confirmed!',
+          message: 'is confirmed.'
+        }
+      case 'pending':
+        return {
+          icon: Clock,
+          iconBg: 'bg-yellow-400',
+          badge: 'Payment Pending',
+          badgeBg: 'bg-yellow-100',
+          badgeText: 'text-yellow-800',
+          title: 'Booking Created',
+          message: 'is awaiting payment.'
+        }
+      case 'expired':
+        return {
+          icon: AlertTriangle,
+          iconBg: 'bg-red-400',
+          badge: 'Payment Expired',
+          badgeBg: 'bg-red-100',
+          badgeText: 'text-red-800',
+          title: 'Payment Expired',
+          message: 'payment has expired.'
+        }
+      case 'failed':
+        return {
+          icon: XCircle,
+          iconBg: 'bg-red-500',
+          badge: 'Payment Failed',
+          badgeBg: 'bg-red-100',
+          badgeText: 'text-red-800',
+          title: 'Payment Failed',
+          message: 'payment could not be processed.'
+        }
+      default:
+        return {
+          icon: Clock,
+          iconBg: 'bg-gray-400',
+          badge: 'Processing',
+          badgeBg: 'bg-gray-100',
+          badgeText: 'text-gray-800',
+          title: 'Processing',
+          message: 'is being processed.'
+        }
+    }
+  }
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -71,6 +146,10 @@ function ConfirmationPage() {
     )
   }
 
+  const statusConfig = getStatusConfig(booking.status)
+  const StatusIcon = statusConfig.icon
+  const showRetryButton = booking.status === 'pending' || booking.status === 'expired' || booking.status === 'failed'
+
   return (
     <div className="min-h-screen bg-light-gray">
       <div className="bg-primary py-6">
@@ -81,14 +160,18 @@ function ConfirmationPage() {
 
       <div className="max-w-2xl mx-auto px-4 py-12">
         <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-          <div className="w-20 h-20 bg-success rounded-full flex items-center justify-center mx-auto mb-6">
-            <Check className="w-10 h-10 text-white" strokeWidth={3} />
+          <div className={`w-20 h-20 ${statusConfig.iconBg} rounded-full flex items-center justify-center mx-auto mb-4`}>
+            <StatusIcon className="w-10 h-10 text-white" strokeWidth={3} />
           </div>
 
-          <h2 className="text-3xl font-bold text-dark mb-4">Booking Confirmed!</h2>
+          <span className={`inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-4 ${statusConfig.badgeBg} ${statusConfig.badgeText}`}>
+            {statusConfig.badge}
+          </span>
+
+          <h2 className="text-3xl font-bold text-dark mb-4">{statusConfig.title}</h2>
 
           <p className="text-gray-text mb-6">
-            Your stay at <span className="font-semibold text-dark">{booking.hotel?.name}</span> is confirmed.
+            Your stay at <span className="font-semibold text-dark">{booking.hotel?.name}</span> {statusConfig.message}
             <br />
             Please save your booking reference.
           </p>
@@ -136,6 +219,26 @@ function ConfirmationPage() {
               <strong>Guests:</strong> {booking.numberOfGuests}
             </p>
           </div>
+
+          {showRetryButton && (
+            <Button
+              onClick={handleRetryPayment}
+              disabled={retrying}
+              className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full px-8 py-3 text-lg mb-4 w-full sm:w-auto"
+            >
+              {retrying ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <CreditCard className="w-5 h-5 mr-2" />
+                  {booking.status === 'pending' ? 'Complete Payment' : 'Retry Payment'}
+                </>
+              )}
+            </Button>
+          )}
 
           <Link to="/">
             <Button className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 py-3 text-lg">
