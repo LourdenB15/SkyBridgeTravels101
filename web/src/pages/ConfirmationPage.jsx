@@ -4,6 +4,7 @@ import { useAuth } from '@clerk/clerk-react'
 import { getBookingByRef, createPaymentInvoice } from '@/services/api'
 import { Check, Loader2, XCircle, Calendar, Home, Clock, CreditCard, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 function ConfirmationPage() {
   const { bookingRef } = useParams()
@@ -115,10 +116,7 @@ function ConfirmationPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-light-gray flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 text-primary animate-spin mx-auto mb-4" />
-          <p className="text-gray-text">Loading confirmation...</p>
-        </div>
+        <LoadingSpinner text="Loading confirmation..." />
       </div>
     )
   }

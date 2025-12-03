@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import SearchBar from '@/components/SearchBar'
 import HotelCard from '@/components/HotelCard'
+import LoadingSpinner from '@/components/LoadingSpinner'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -138,12 +139,7 @@ function SearchResultsPage() {
             </div>
 
             {loading ? (
-              <div className="flex h-64 items-center justify-center">
-                <div className="text-center text-gray-text">
-                  <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-primary"></div>
-                  <p>Loading hotels...</p>
-                </div>
-              </div>
+              <LoadingSpinner text="Loading hotels..." className="h-64" />
             ) : hotels.length === 0 ? (
               <div className="rounded-xl bg-white p-8 text-center shadow-md">
                 <svg

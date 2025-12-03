@@ -4,6 +4,7 @@ import { getHotel } from '@/services/api'
 import SearchBar from '@/components/SearchBar'
 import RoomCard from '@/components/RoomCard'
 import Map from '@/components/Map'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 function HotelDetailsPage() {
   const { id } = useParams()
@@ -46,12 +47,7 @@ function HotelDetailsPage() {
             <SearchBar initialValues={{ guests: Number(guests), checkIn, checkOut }} />
           </div>
         </div>
-        <div className="flex min-h-[400px] items-center justify-center">
-          <div className="text-center">
-            <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-            <p className="mt-4 text-gray-text">Loading hotel details...</p>
-          </div>
-        </div>
+        <LoadingSpinner text="Loading hotel details..." className="min-h-[400px]" />
       </div>
     )
   }

@@ -5,6 +5,7 @@ import { getHotel, createBooking, createPaymentInvoice } from '@/services/api'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import GuestForm from '@/components/GuestForm'
 import OrderSummary from '@/components/OrderSummary'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 function BookingPage() {
   const { hotelId, roomId } = useParams()
@@ -115,10 +116,7 @@ function BookingPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-light-gray flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mx-auto mb-4"></div>
-          <p className="text-gray-text">Loading booking details...</p>
-        </div>
+        <LoadingSpinner text="Loading booking details..." />
       </div>
     )
   }
