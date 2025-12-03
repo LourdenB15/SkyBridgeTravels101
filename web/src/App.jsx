@@ -6,6 +6,7 @@ import SearchResultsPage from './pages/SearchResultsPage'
 import HotelDetailsPage from './pages/HotelDetailsPage'
 import BookingPage from './pages/BookingPage'
 import ConfirmationPage from './pages/ConfirmationPage'
+import NotFoundPage from './pages/NotFoundPage'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/hotel/:id" element={<HotelDetailsPage />} />
         <Route path="/booking/:hotelId/:roomId" element={<ProtectedRoute><BookingPage /></ProtectedRoute>} />
         <Route path="/confirmation/:bookingRef" element={<ConfirmationPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Layout>
   )
