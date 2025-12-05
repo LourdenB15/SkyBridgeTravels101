@@ -1,4 +1,5 @@
 import { useUser, SignInButton, UserButton } from '@clerk/clerk-react'
+import { Link } from 'react-router-dom'
 
 function AuthButtons() {
   const { isSignedIn, user, isLoaded } = useUser()
@@ -13,6 +14,13 @@ function AuthButtons() {
         <span className="text-white text-sm">
           Hi, {user.firstName || 'User'}!
         </span>
+        <span className="text-white/50">|</span>
+        <Link
+          to="/bookings"
+          className="text-white/80 text-sm hover:text-white hover:underline transition-colors"
+        >
+          My Bookings
+        </Link>
         <UserButton
           afterSignOutUrl="/"
           appearance={{
