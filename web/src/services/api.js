@@ -62,4 +62,13 @@ export async function createPaymentInvoice(bookingId, token) {
   return response.data
 }
 
+export async function cancelBooking(bookingId, token) {
+  const response = await api.patch(`/bookings/${bookingId}/cancel`, {}, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
 export default api
