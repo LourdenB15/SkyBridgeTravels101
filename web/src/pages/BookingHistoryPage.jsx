@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '@clerk/clerk-react'
+import { CalendarX2 } from 'lucide-react'
 import { getUserBookings } from '@/services/api'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import BookingHistoryCard from '@/components/BookingHistoryCard'
@@ -62,9 +64,16 @@ function BookingHistoryPage() {
         )}
 
         {!error && bookings.length === 0 && (
-          <div className="text-center py-16">
-            <p className="text-gray-text text-xl mb-2">No bookings yet</p>
+          <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+            <CalendarX2 className="w-16 h-16 text-gray-400 mb-4" />
+            <p className="text-xl text-gray-500 mb-2">No bookings yet</p>
             <p className="text-gray-text mb-6">When you book a stay, it will appear here</p>
+            <Link
+              to="/"
+              className="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-colors"
+            >
+              Find Hotels
+            </Link>
           </div>
         )}
 
