@@ -18,49 +18,50 @@ function SearchBar({ initialValues = {} }) {
   }
 
   return (
-    <div className="rounded-xl bg-white p-4 shadow-lg">
-      <div className="flex flex-col gap-4 md:flex-row md:items-end">
-        <div className="flex-1">
-          <label className="mb-1 block text-sm font-medium text-dark">Location</label>
+    <div className="rounded-xl bg-white p-6 shadow-lg">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[2fr_1.5fr_1.5fr_1fr_auto] lg:items-end">
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-semibold text-gray-800">Location</label>
           <input
             type="text"
             placeholder="Cordova, Cebu"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            className="w-full rounded-lg border-2 border-dark px-4 py-3 text-dark placeholder:text-gray-text focus:border-[#3B82F6] focus:outline-none"
+            className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-800 transition-all placeholder:text-gray-400 focus:border-[#4e8cff] focus:outline-none focus:ring-2 focus:ring-[#4e8cff]/10"
           />
         </div>
-        <div className="flex-1">
-          <label className="mb-1 block text-sm font-medium text-dark">Check-in</label>
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-semibold text-gray-800">Check-in</label>
           <input
             type="date"
             value={checkIn}
             onChange={(e) => setCheckIn(e.target.value)}
-            className="w-full rounded-lg border-2 border-dark px-4 py-3 text-dark focus:border-[#3B82F6] focus:outline-none"
+            className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-800 transition-all focus:border-[#4e8cff] focus:outline-none focus:ring-2 focus:ring-[#4e8cff]/10"
           />
         </div>
-        <div className="flex-1">
-          <label className="mb-1 block text-sm font-medium text-dark">Check-out</label>
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-semibold text-gray-800">Check-out</label>
           <input
             type="date"
             value={checkOut}
             onChange={(e) => setCheckOut(e.target.value)}
-            className="w-full rounded-lg border-2 border-dark px-4 py-3 text-dark focus:border-[#3B82F6] focus:outline-none"
+            className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-800 transition-all focus:border-[#4e8cff] focus:outline-none focus:ring-2 focus:ring-[#4e8cff]/10"
           />
         </div>
-        <div className="w-full md:w-32">
-          <label className="mb-1 block text-sm font-medium text-dark">Guests</label>
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-semibold text-gray-800">Guests</label>
           <input
             type="number"
             min="1"
+            max="10"
             value={guests}
             onChange={(e) => setGuests(e.target.value)}
-            className="w-full rounded-lg border-2 border-dark px-4 py-3 text-dark focus:border-[#3B82F6] focus:outline-none"
+            className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-800 transition-all focus:border-[#4e8cff] focus:outline-none focus:ring-2 focus:ring-[#4e8cff]/10"
           />
         </div>
         <button
           onClick={handleSearch}
-          className="flex items-center justify-center gap-2 rounded-full bg-[#3B82F6] px-8 py-3 font-medium text-white transition-colors hover:bg-[#2563EB]"
+          className="col-span-1 flex items-center justify-center gap-2 rounded-lg bg-[#4e8cff] px-8 py-3 font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#3d7ae8] hover:shadow-lg md:col-span-2 lg:col-span-1"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
