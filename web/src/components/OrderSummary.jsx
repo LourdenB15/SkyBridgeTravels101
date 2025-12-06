@@ -1,5 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-
 const TAX_RATE = 0.12
 
 function OrderSummary({
@@ -45,71 +43,68 @@ function OrderSummary({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">Order Summary</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <h3 className="font-semibold text-dark mb-3">Booking Details</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-text">Check-in</span>
-                <span className="font-medium">{formatDate(checkIn)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-text">Check-out</span>
-                <span className="font-medium">{formatDate(checkOut)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-text">Guests</span>
-                <span className="font-medium">{guests} {Number(guests) === 1 ? 'guest' : 'guests'}</span>
-              </div>
-              {roomName && (
-                <div className="flex justify-between">
-                  <span className="text-gray-text">Room</span>
-                  <span className="font-medium">{roomName}</span>
-                </div>
-              )}
-            </div>
-          </div>
+    <div className="bg-white rounded-xl p-6 shadow-md">
+      <h2 className="text-xl font-semibold text-dark pb-4 mb-4 border-b-2 border-gray-100">
+        Order Summary
+      </h2>
 
-          <div>
-            <h3 className="font-semibold text-dark mb-3">Price Breakdown</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-text">
-                  Stay ({nights} {nights === 1 ? 'night' : 'nights'} × {formatPrice(roomPrice)})
-                </span>
-                <span className="font-medium">{formatPrice(staySubtotal)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-text">VAT (12%)</span>
-                <span className="font-medium">{formatPrice(vatAmount)}</span>
-              </div>
-              <div className="border-t pt-2 mt-2">
-                <div className="flex justify-between text-lg font-bold">
-                  <span>Total</span>
-                  <span className="text-primary">{formatPrice(total)}</span>
-                </div>
-              </div>
+      <div className="mb-6">
+        <h3 className="font-semibold text-dark mb-4">Booking Details</h3>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-text">Check-in</span>
+            <span className="font-medium text-dark">{formatDate(checkIn)}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-text">Check-out</span>
+            <span className="font-medium text-dark">{formatDate(checkOut)}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-text">Guests</span>
+            <span className="font-medium text-dark">{guests} {Number(guests) === 1 ? 'guest' : 'guests'}</span>
+          </div>
+          {roomName && (
+            <div className="flex justify-between items-center">
+              <span className="text-gray-text">Room</span>
+              <span className="font-medium text-dark">{roomName}</span>
             </div>
+          )}
+        </div>
+      </div>
+
+      <div className="h-px bg-gray-200 my-6" />
+
+      <div className="mb-6">
+        <h3 className="font-semibold text-dark mb-4">Price Breakdown</h3>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-text">
+              Stay ({nights} {nights === 1 ? 'night' : 'nights'} × {formatPrice(roomPrice)})
+            </span>
+            <span className="font-medium text-dark">{formatPrice(staySubtotal)}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-text">VAT (12%)</span>
+            <span className="font-medium text-dark">{formatPrice(vatAmount)}</span>
           </div>
         </div>
+      </div>
 
-        <div className="mt-6 pt-6 border-t">
-          <button
-            type="button"
-            onClick={onConfirm}
-            disabled={confirmDisabled || isSubmitting}
-            className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 px-6 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? 'Processing...' : 'Confirm Booking'}
-          </button>
-        </div>
-      </CardContent>
-    </Card>
+      <div className="flex justify-between items-center pt-4 border-t-2 border-gray-100">
+        <span className="text-lg font-semibold text-dark">Total</span>
+        <span className="text-2xl font-bold text-primary">{formatPrice(total)}</span>
+      </div>
+
+      <button
+        type="button"
+        onClick={onConfirm}
+        disabled={confirmDisabled || isSubmitting}
+        className="w-full mt-6 bg-primary hover:bg-[#3d7ae8] text-white font-semibold py-3 px-6 rounded-lg transition-all cursor-pointer hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
+      >
+        {isSubmitting ? 'Processing...' : 'Complete Booking'}
+      </button>
+
+    </div>
   )
 }
 
