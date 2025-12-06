@@ -134,7 +134,7 @@ function ConfirmationPage() {
             Please check your booking reference and try again.
           </p>
           <Link to="/">
-            <Button className="bg-primary hover:bg-primary/90 text-white rounded-full px-8">
+            <Button className="cursor-pointer bg-primary hover:bg-primary/90 text-white rounded-full px-8">
               <Home className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
@@ -239,7 +239,7 @@ function ConfirmationPage() {
           )}
 
           <Link to="/">
-            <Button className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 py-3 text-lg">
+            <Button className="cursor-pointer bg-primary hover:bg-primary/90 text-white rounded-full px-8 py-3 text-lg">
               <Home className="w-5 h-5 mr-2" />
               Back to Home
             </Button>
