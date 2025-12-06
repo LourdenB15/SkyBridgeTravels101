@@ -56,14 +56,14 @@ function RoomCard({ room, hotelId, guests, checkIn, checkOut }) {
 
         <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
           <div>
-            <span className="text-xl font-bold text-dark">
+            <span className="text-xl font-bold text-primary">
               {formatPrice(room.pricePerNight)}
             </span>
             <span className="text-sm text-gray-text">/night</span>
           </div>
           <button
             onClick={handleBookNow}
-            className="rounded-full bg-primary px-6 py-2 font-medium text-white transition-colors hover:bg-[#2563EB]"
+            className="cursor-pointer rounded-full bg-primary px-6 py-2 font-medium text-white transition-colors hover:bg-[#2563EB]"
           >
             Book Now
           </button>
