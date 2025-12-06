@@ -80,7 +80,14 @@ function BookingHistoryCard({ booking, onCancel, isCancelling }) {
   }
 
   const nights = calculateNights(booking.checkInDate, booking.checkOutDate)
-  const canCancel = booking.status === 'pending'
+  const checkInDate = new Date(booking.checkInDate)
+  const checkOutDate = new Date(booking.checkOutDate)
+  const now = new Date()
+  now.setHours(0, 0, 0, 0)
+  const isUpcoming = checkInDate >= now
+  const isPast = checkOutDate < now
+  const displayStatus = (booking.status === 'confirmed' && isPast) ? 'completed' : booking.status
+  const canCancel = booking.status === 'pending' || (booking.status === 'confirmed' && isUpcoming)
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -105,7 +112,7 @@ function BookingHistoryCard({ booking, onCancel, isCancelling }) {
               </p>
             </div>
             <div className="flex-shrink-0">
-              {getStatusBadge(booking.status)}
+              {getStatusBadge(displayStatus)}
             </div>
           </div>
 

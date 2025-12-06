@@ -62,3 +62,17 @@ export const updatePaymentId = async (id, paymentId) => {
     }
   })
 }
+
+export const markCompletedBookings = async (clerkUserId) => {
+  const now = new Date()
+  now.setHours(0, 0, 0, 0)
+
+  return prisma.booking.updateMany({
+    where: {
+      clerkUserId,
+      status: 'confirmed',
+      checkOutDate: { lt: now }
+    },
+    data: { status: 'completed' }
+  })
+}
