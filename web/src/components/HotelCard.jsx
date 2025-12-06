@@ -22,7 +22,7 @@ function HotelCard({ hotel, guests, checkIn, checkOut }) {
         <div className="flex flex-1 flex-col justify-between p-4">
           <div>
             <div className="mb-2 flex items-start justify-between">
-              <h3 className="text-lg font-semibold text-primary">{hotel.name}</h3>
+              <h3 className="text-lg font-semibold text-dark">{hotel.name}</h3>
               <span className="rounded bg-rating-blue px-2 py-1 text-sm font-medium text-white">
                 {hotel.rating?.toFixed(1) || 'N/A'}
               </span>
@@ -32,7 +32,7 @@ function HotelCard({ hotel, guests, checkIn, checkOut }) {
           <div className="flex items-end justify-between">
             <div>
               <p className="text-sm text-gray-text">Starting from</p>
-              <p className="text-xl font-bold text-dark">
+              <p className="text-xl font-bold text-primary">
                 ₱{hotel.minPrice?.toLocaleString() || 'N/A'}
                 <span className="text-sm font-normal text-gray-text">/night</span>
               </p>
