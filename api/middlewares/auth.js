@@ -1,21 +1,27 @@
-import { clerkMiddleware, getAuth, requireAuth } from '@clerk/express'
+import { verifyToken } from '../utils/jwt.js'
 
-export { clerkMiddleware, requireAuth }
+export const requireAuth = (req, res, next) => {
+  const token = req.cookies?.auth_token
 
-export const requireAuthentication = (req, res, next) => {
-  const auth = getAuth(req)
-
-  if (!auth || !auth.userId) {
+  if (!token) {
     return res.status(401).json({
       error: 'Unauthorized',
       message: 'Authentication required'
     })
   }
 
-  req.auth = {
-    userId: auth.userId,
-    sessionId: auth.sessionId
+  try {
+    const decoded = verifyToken(token)
+    req.user = {
+      userId: decoded.userId
+    }
+    next()
+  } catch (error) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'Invalid or expired token'
+    })
   }
-
-  next()
 }
+
+export const requireAuthentication = requireAuth

@@ -4,7 +4,7 @@ export const createBooking = async (req, res, next) => {
   try {
     const bookingData = {
       ...req.body,
-      clerkUserId: req.auth.userId
+      userId: req.user.userId
     }
     const booking = await bookingService.createBooking(bookingData)
     res.status(201).json(booking)
@@ -35,7 +35,7 @@ export const getBookingByRef = async (req, res, next) => {
 
 export const getUserBookings = async (req, res, next) => {
   try {
-    const bookings = await bookingService.getUserBookings(req.auth.userId)
+    const bookings = await bookingService.getUserBookings(req.user.userId)
     res.json(bookings)
   } catch (error) {
     next(error)
@@ -45,7 +45,7 @@ export const getUserBookings = async (req, res, next) => {
 export const cancelBooking = async (req, res, next) => {
   try {
     const { id } = req.params
-    const booking = await bookingService.cancelBooking(id, req.auth.userId)
+    const booking = await bookingService.cancelBooking(id, req.user.userId)
     res.json(booking)
   } catch (error) {
     next(error)

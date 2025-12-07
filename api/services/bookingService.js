@@ -56,9 +56,9 @@ export const getBookingByRef = async (bookingRef) => {
   return booking
 }
 
-export const getUserBookings = async (clerkUserId) => {
-  await bookingRepository.markCompletedBookings(clerkUserId)
-  return bookingRepository.findByUserId(clerkUserId)
+export const getUserBookings = async (userId) => {
+  await bookingRepository.markCompletedBookings(userId)
+  return bookingRepository.findByUserId(userId)
 }
 
 export const updateBookingStatus = async (id, status) => {
@@ -71,14 +71,14 @@ export const updateBookingStatus = async (id, status) => {
   return bookingRepository.updateStatus(id, status)
 }
 
-export const cancelBooking = async (id, clerkUserId) => {
+export const cancelBooking = async (id, userId) => {
   const booking = await bookingRepository.findById(id)
 
   if (!booking) {
     throw new NotFoundError('Booking not found')
   }
 
-  if (booking.clerkUserId !== clerkUserId) {
+  if (booking.userId !== userId) {
     throw new NotFoundError('Booking not found')
   }
 

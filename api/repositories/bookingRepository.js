@@ -30,9 +30,9 @@ export const findByRef = async (bookingRef) => {
   })
 }
 
-export const findByUserId = async (clerkUserId) => {
+export const findByUserId = async (userId) => {
   return prisma.booking.findMany({
-    where: { clerkUserId },
+    where: { userId },
     include: {
       hotel: true,
       room: true
@@ -63,13 +63,13 @@ export const updatePaymentId = async (id, paymentId) => {
   })
 }
 
-export const markCompletedBookings = async (clerkUserId) => {
+export const markCompletedBookings = async (userId) => {
   const now = new Date()
   now.setHours(0, 0, 0, 0)
 
   return prisma.booking.updateMany({
     where: {
-      clerkUserId,
+      userId,
       status: 'confirmed',
       checkOutDate: { lt: now }
     },
