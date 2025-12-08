@@ -57,4 +57,12 @@ export async function updateProfile(firstName, lastName) {
   return response.data
 }
 
+export async function changePassword(currentPassword, newPassword) {
+  const response = await authApi.put('/auth/change-password', {
+    currentPassword,
+    newPassword
+  })
+  return response.data
+}
+
 export default authApi
