@@ -52,3 +52,13 @@ export const clearResetToken = async (id) => {
     data: { resetToken: null, resetTokenExpiry: null }
   })
 }
+
+export const updateProfile = async (id, data) => {
+  return prisma.user.update({
+    where: { id },
+    data: {
+      firstName: data.firstName,
+      lastName: data.lastName
+    }
+  })
+}

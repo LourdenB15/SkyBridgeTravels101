@@ -135,12 +135,21 @@ function Header() {
             My Bookings
           </Link>
           {isAuthenticated && (
-            <button
-              onClick={handleSignOut}
-              className="rounded-lg px-4 py-2 text-left text-[0.95rem] font-medium text-white/80 transition-all hover:bg-white/10 hover:text-white md:hidden"
-            >
-              Logout
-            </button>
+            <>
+              <Link
+                to="/profile"
+                onClick={closeMobileMenu}
+                className="rounded-lg px-4 py-2 text-[0.95rem] font-medium text-white/80 transition-all hover:bg-white/10 hover:text-white md:hidden"
+              >
+                Profile Settings
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className="rounded-lg px-4 py-2 text-left text-[0.95rem] font-medium text-white/80 transition-all hover:bg-white/10 hover:text-white md:hidden"
+              >
+                Logout
+              </button>
+            </>
           )}
         </div>
 
@@ -163,6 +172,13 @@ function Header() {
 
               {dropdownOpen && (
                 <div className="absolute right-0 top-full z-50 mt-2 hidden min-w-[200px] overflow-hidden rounded-lg bg-black/80 backdrop-blur-sm md:block">
+                  <Link
+                    to="/profile"
+                    onClick={() => setDropdownOpen(false)}
+                    className="flex w-full items-center px-5 py-3 text-[0.95rem] text-white/80 transition-all hover:bg-white/10 hover:text-white"
+                  >
+                    Profile Settings
+                  </Link>
                   <button
                     onClick={handleSignOut}
                     className="flex w-full items-center px-5 py-3 text-[0.95rem] text-white/80 transition-all hover:bg-white/10 hover:text-white"
