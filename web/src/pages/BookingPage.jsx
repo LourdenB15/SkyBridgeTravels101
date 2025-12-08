@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useSearchParams, Link } from 'react-router-dom'
-import { useAuth } from '@clerk/clerk-react'
 import { getHotel, createBooking, createPaymentInvoice } from '@/services/api'
 import GuestForm from '@/components/GuestForm'
 import OrderSummary from '@/components/OrderSummary'
@@ -9,7 +8,6 @@ import LoadingSpinner from '@/components/LoadingSpinner'
 function BookingPage() {
   const { hotelId, roomId } = useParams()
   const [searchParams] = useSearchParams()
-  const { getToken } = useAuth()
   const guests = searchParams.get('guests') || '1'
   const checkIn = searchParams.get('checkIn') || ''
   const checkOut = searchParams.get('checkOut') || ''
@@ -77,12 +75,6 @@ function BookingPage() {
       setSubmitting(true)
       setError(null)
 
-      const token = await getToken()
-      if (!token) {
-        setError('Authentication required. Please sign in.')
-        return
-      }
-
       const nights = calculateNights()
       const roomPrice = Number(room.pricePerNight)
 
@@ -99,9 +91,9 @@ function BookingPage() {
         nights
       }
 
-      const result = await createBooking(bookingData, token)
+      const result = await createBooking(bookingData)
 
-      const paymentResult = await createPaymentInvoice(result.id, token)
+      const paymentResult = await createPaymentInvoice(result.id)
 
       window.location.href = paymentResult.invoiceUrl
     } catch (err) {

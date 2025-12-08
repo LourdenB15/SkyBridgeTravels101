@@ -4,7 +4,8 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  withCredentials: true
 })
 
 export async function getHotels(sort = 'relevance', location) {
@@ -30,12 +31,8 @@ export async function searchHotels(guests, sort = 'relevance', location) {
   return response.data
 }
 
-export async function createBooking(data, token) {
-  const response = await api.post('/bookings', data, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
+export async function createBooking(data) {
+  const response = await api.post('/bookings', data)
   return response.data
 }
 
@@ -44,30 +41,18 @@ export async function getBookingByRef(bookingRef) {
   return response.data
 }
 
-export async function getUserBookings(token) {
-  const response = await api.get('/bookings/user', {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
+export async function getUserBookings() {
+  const response = await api.get('/bookings/user')
   return response.data
 }
 
-export async function createPaymentInvoice(bookingId, token) {
-  const response = await api.post('/payments/create-invoice', { bookingId }, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
+export async function createPaymentInvoice(bookingId) {
+  const response = await api.post('/payments/create-invoice', { bookingId })
   return response.data
 }
 
-export async function cancelBooking(bookingId, token) {
-  const response = await api.patch(`/bookings/${bookingId}/cancel`, {}, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
+export async function cancelBooking(bookingId) {
+  const response = await api.patch(`/bookings/${bookingId}/cancel`, {})
   return response.data
 }
 

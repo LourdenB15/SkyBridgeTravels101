@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { useAuth } from '@clerk/clerk-react'
 import { getBookingByRef, createPaymentInvoice } from '@/services/api'
 import { Check, Loader2, XCircle, Calendar, Home, Clock, CreditCard, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -8,7 +7,6 @@ import LoadingSpinner from '@/components/LoadingSpinner'
 
 function ConfirmationPage() {
   const { bookingRef } = useParams()
-  const { getToken } = useAuth()
   const [booking, setBooking] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -35,13 +33,7 @@ function ConfirmationPage() {
   const handleRetryPayment = async () => {
     try {
       setRetrying(true)
-      const token = await getToken()
-      if (!token) {
-        setError('Please sign in to retry payment')
-        setRetrying(false)
-        return
-      }
-      const paymentResult = await createPaymentInvoice(booking.id, token)
+      const paymentResult = await createPaymentInvoice(booking.id)
       window.location.href = paymentResult.invoiceUrl
     } catch (err) {
       setError('Failed to create payment. Please try again.')
