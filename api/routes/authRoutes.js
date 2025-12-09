@@ -7,7 +7,8 @@ import {
   forgotPasswordSchema,
   resetPasswordSchema,
   updateProfileSchema,
-  changePasswordSchema
+  changePasswordSchema,
+  deleteAccountSchema
 } from '../utils/validationSchemas.js'
 
 const router = Router()
@@ -20,5 +21,6 @@ router.post('/reset-password', validate(resetPasswordSchema), authController.res
 router.get('/me', authController.me)
 router.put('/profile', validate(updateProfileSchema), authController.updateProfile)
 router.put('/change-password', validate(changePasswordSchema), authController.changePassword)
+router.delete('/account', validate(deleteAccountSchema), authController.deleteAccount)
 
 export default router

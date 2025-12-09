@@ -65,4 +65,11 @@ export async function changePassword(currentPassword, newPassword) {
   return response.data
 }
 
+export async function deleteAccount(password) {
+  const response = await authApi.delete('/auth/account', {
+    data: { password }
+  })
+  return response.data
+}
+
 export default authApi
