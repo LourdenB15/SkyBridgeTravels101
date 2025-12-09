@@ -18,12 +18,28 @@ export const getHotelById = async (id) => {
 export const searchHotels = async (guests = 1, sortBy = 'relevance', location = null) => {
   const hotels = await hotelRepository.findWithAvailableRooms(guests, location)
 
-  if (sortBy === 'price') {
+  if (sortBy === 'price-asc') {
     return hotels.sort((a, b) => {
       const priceA = a.minPrice || Infinity
       const priceB = b.minPrice || Infinity
       return Number(priceA) - Number(priceB)
     })
+  }
+
+  if (sortBy === 'price-desc') {
+    return hotels.sort((a, b) => {
+      const priceA = a.minPrice || 0
+      const priceB = b.minPrice || 0
+      return Number(priceB) - Number(priceA)
+    })
+  }
+
+  if (sortBy === 'name-asc') {
+    return hotels.sort((a, b) => a.name.localeCompare(b.name))
+  }
+
+  if (sortBy === 'name-desc') {
+    return hotels.sort((a, b) => b.name.localeCompare(a.name))
   }
 
   if (location) {
