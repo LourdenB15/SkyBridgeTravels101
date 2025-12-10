@@ -91,6 +91,15 @@ export const cancelBooking = async (id, userId) => {
     throw new Error('Cannot cancel a completed booking')
   }
 
+  const checkInDate = new Date(booking.checkInDate)
+  const now = new Date()
+  const diffTime = checkInDate - now
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+  if (diffDays < 7) {
+    throw new Error('Bookings cannot be cancelled within 7 days of check-in date')
+  }
+
   if (booking.status === 'confirmed' && booking.paymentId) {
     await createRefund({
       invoiceId: booking.paymentId,

@@ -87,7 +87,9 @@ function BookingHistoryCard({ booking, onCancel, isCancelling }) {
   const isUpcoming = checkInDate >= now
   const isPast = checkOutDate < now
   const displayStatus = (booking.status === 'confirmed' && isPast) ? 'completed' : booking.status
-  const canCancel = booking.status === 'pending' || (booking.status === 'confirmed' && isUpcoming)
+  const diffTime = checkInDate - now
+  const daysUntilCheckIn = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  const canCancel = (booking.status === 'pending' || (booking.status === 'confirmed' && isUpcoming)) && daysUntilCheckIn >= 7
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -158,6 +160,11 @@ function BookingHistoryCard({ booking, onCancel, isCancelling }) {
               >
                 {isCancelling ? 'Cancelling...' : 'Cancel'}
               </button>
+            )}
+            {(booking.status === 'pending' || booking.status === 'confirmed') && isUpcoming && daysUntilCheckIn < 7 && (
+              <p className="text-sm text-gray-500 italic">
+                Cannot cancel within 7 days of check-in
+              </p>
             )}
           </div>
         </div>
