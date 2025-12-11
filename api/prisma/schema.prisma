@@ -7,6 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id               String    @id @default(uuid())
+  email            String    @unique
+  password         String
+  firstName        String
+  lastName         String
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  bookings Booking[]
+}
+
 model Hotel {
   id          String   @id @default(uuid())
   name        String
@@ -41,7 +55,7 @@ model Room {
 model Booking {
   id             String   @id @default(uuid())
   bookingRef     String   @unique
-  clerkUserId    String
+  userId         String
   hotelId        String
   roomId         String
   guestFirstName String
@@ -56,6 +70,7 @@ model Booking {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
+  user  User  @relation(fields: [userId], references: [id])
   hotel Hotel @relation(fields: [hotelId], references: [id])
   room  Room  @relation(fields: [roomId], references: [id])
 }
