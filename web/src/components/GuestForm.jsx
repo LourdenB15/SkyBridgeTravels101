@@ -86,53 +86,55 @@ function GuestForm({ onValuesChange, onValidationChange }) {
   }, [errors, values, onValidationChange])
 
   return (
-    <div className="space-y-4">
-      <div>
-        <label htmlFor="firstName" className="block text-sm font-medium text-dark mb-1">
-          First Name <span className="text-red-500">*</span>
-        </label>
-        <Input
-          id="firstName"
-          name="firstName"
-          type="text"
-          placeholder="Enter your first name"
-          value={values.firstName}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          className={`w-full px-4 py-3 border-2 rounded-xl focus:border-primary focus:outline-none ${
-            errors.firstName && touched.firstName ? 'border-red-500' : 'border-dark'
-          }`}
-          aria-invalid={errors.firstName && touched.firstName ? 'true' : 'false'}
-        />
-        {errors.firstName && touched.firstName && (
-          <p className="mt-1 text-sm text-red-500">{errors.firstName}</p>
-        )}
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="firstName" className="block text-sm font-semibold text-dark mb-2">
+            First Name <span className="text-red-500">*</span>
+          </label>
+          <Input
+            id="firstName"
+            name="firstName"
+            type="text"
+            placeholder="Enter your first name"
+            value={values.firstName}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            className={`w-full px-4 py-3 border-2 rounded-lg transition-all focus:border-primary focus:ring-primary/10 focus:ring-4 focus:outline-none ${
+              errors.firstName && touched.firstName ? 'border-red-500' : 'border-gray-200'
+            }`}
+            aria-invalid={errors.firstName && touched.firstName ? 'true' : 'false'}
+          />
+          {errors.firstName && touched.firstName && (
+            <p className="mt-1 text-sm text-red-500">{errors.firstName}</p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="lastName" className="block text-sm font-semibold text-dark mb-2">
+            Last Name <span className="text-red-500">*</span>
+          </label>
+          <Input
+            id="lastName"
+            name="lastName"
+            type="text"
+            placeholder="Enter your last name"
+            value={values.lastName}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            className={`w-full px-4 py-3 border-2 rounded-lg transition-all focus:border-primary focus:ring-primary/10 focus:ring-4 focus:outline-none ${
+              errors.lastName && touched.lastName ? 'border-red-500' : 'border-gray-200'
+            }`}
+            aria-invalid={errors.lastName && touched.lastName ? 'true' : 'false'}
+          />
+          {errors.lastName && touched.lastName && (
+            <p className="mt-1 text-sm text-red-500">{errors.lastName}</p>
+          )}
+        </div>
       </div>
 
       <div>
-        <label htmlFor="lastName" className="block text-sm font-medium text-dark mb-1">
-          Last Name <span className="text-red-500">*</span>
-        </label>
-        <Input
-          id="lastName"
-          name="lastName"
-          type="text"
-          placeholder="Enter your last name"
-          value={values.lastName}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          className={`w-full px-4 py-3 border-2 rounded-xl focus:border-primary focus:outline-none ${
-            errors.lastName && touched.lastName ? 'border-red-500' : 'border-dark'
-          }`}
-          aria-invalid={errors.lastName && touched.lastName ? 'true' : 'false'}
-        />
-        {errors.lastName && touched.lastName && (
-          <p className="mt-1 text-sm text-red-500">{errors.lastName}</p>
-        )}
-      </div>
-
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-dark mb-1">
+        <label htmlFor="email" className="block text-sm font-semibold text-dark mb-2">
           Email <span className="text-red-500">*</span>
         </label>
         <Input
@@ -143,8 +145,8 @@ function GuestForm({ onValuesChange, onValidationChange }) {
           value={values.email}
           onChange={handleChange}
           onBlur={handleBlur}
-          className={`w-full px-4 py-3 border-2 rounded-xl focus:border-primary focus:outline-none ${
-            errors.email && touched.email ? 'border-red-500' : 'border-dark'
+          className={`w-full px-4 py-3 border-2 rounded-lg transition-all focus:border-primary focus:ring-primary/10 focus:ring-4 focus:outline-none ${
+            errors.email && touched.email ? 'border-red-500' : 'border-gray-200'
           }`}
           aria-invalid={errors.email && touched.email ? 'true' : 'false'}
         />

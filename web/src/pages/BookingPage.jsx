@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react'
 import { useParams, useSearchParams, Link } from 'react-router-dom'
 import { useAuth } from '@clerk/clerk-react'
 import { getHotel, createBooking, createPaymentInvoice } from '@/services/api'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import GuestForm from '@/components/GuestForm'
 import OrderSummary from '@/components/OrderSummary'
 import LoadingSpinner from '@/components/LoadingSpinner'
@@ -26,15 +25,13 @@ function BookingPage() {
     lastName: '',
     email: ''
   })
-  const [isFormValid, setIsFormValid] = useState(false)
   const [validateForm, setValidateForm] = useState(null)
 
   const handleGuestValuesChange = useCallback((values) => {
     setGuestInfo(values)
   }, [])
 
-  const handleValidationChange = useCallback((isValid, validateFn) => {
-    setIsFormValid(isValid)
+  const handleValidationChange = useCallback((_, validateFn) => {
     setValidateForm(() => validateFn)
   }, [])
 
@@ -144,84 +141,85 @@ function BookingPage() {
 
   return (
     <div className="min-h-screen bg-light-gray">
-      <div className="bg-primary py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-white">Complete your Booking</h1>
-          <p className="text-white/80 mt-1">Book now</p>
+      <div className="bg-gradient-to-r from-primary to-[#3d7ae8] py-8 pb-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h1 className="text-2xl md:text-3xl font-semibold text-white">Complete your Booking</h1>
+          <p className="text-white/90 mt-1">Book now and secure your stay</p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-6">
-          <div className="flex items-center gap-2 text-sm">
-            <img
-              src={hotel.images?.[0] || 'https://placehold.co/100x100?text=Hotel'}
-              alt={hotel.name}
-              className="w-16 h-16 object-cover rounded-lg"
-            />
-            <div>
-              <h2 className="font-semibold text-dark">{hotel.name}</h2>
-              <p className="text-gray-text text-sm">{room.name}</p>
-              <p className="text-gray-text text-sm">{hotel.address}</p>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
+          <div>
+            <div className="bg-white rounded-xl p-4 shadow-md mb-6 flex flex-col sm:flex-row gap-4">
+              <div className="w-full sm:w-[100px] h-[180px] sm:h-[100px] rounded-xl overflow-hidden flex-shrink-0">
+                <img
+                  src={hotel.images?.[0] || 'https://placehold.co/100x100?text=Hotel'}
+                  alt={hotel.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="flex-1">
+                <h2 className="text-xl font-semibold text-dark">{hotel.name}</h2>
+                <p className="text-gray-text mt-1">{room.name}</p>
+                <p className="text-gray-text text-sm flex items-center gap-1 mt-1">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  {hotel.address}
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Guest Information</CardTitle>
-            </CardHeader>
-            <CardContent>
+            <div className="bg-white rounded-xl p-6 shadow-md mb-6">
+              <h2 className="text-xl font-semibold text-dark mb-6">Guest Information</h2>
               <GuestForm
                 onValuesChange={handleGuestValuesChange}
                 onValidationChange={handleValidationChange}
               />
-            </CardContent>
-          </Card>
+            </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Payment</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-white rounded-xl p-6 shadow-md mb-6">
+              <h2 className="text-xl font-semibold text-dark mb-6">Payment</h2>
+              <div className="text-center py-6">
+                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                   </svg>
                 </div>
-                <p className="text-gray-text mb-4">
-                  Secure payment via Xendit
-                </p>
-                <p className="text-sm text-gray-text">
-                  You will be redirected to complete your payment securely.
+                <h3 className="text-lg font-semibold text-dark mb-2">Secure payment via Xendit</h3>
+                <p className="text-gray-text">
+                  You will be redirected to complete your payment securely.<br />
+                  Multiple payment methods are available.
                 </p>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {error && !loading && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <p className="text-red-700 text-sm">{error}</p>
             </div>
-          </div>
-        )}
 
-        <OrderSummary
-          pricePerNight={room.pricePerNight}
-          checkIn={checkIn}
-          checkOut={checkOut}
-          guests={guests}
-          roomName={room.name}
-          onConfirm={handleConfirmBooking}
-          isSubmitting={submitting}
-        />
+            {error && !loading && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <p className="text-red-700 text-sm">{error}</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <aside className="lg:sticky lg:top-24 lg:h-fit mb-6 lg:mb-0">
+            <OrderSummary
+              pricePerNight={room.pricePerNight}
+              checkIn={checkIn}
+              checkOut={checkOut}
+              guests={guests}
+              roomName={room.name}
+              onConfirm={handleConfirmBooking}
+              isSubmitting={submitting}
+            />
+          </aside>
+        </div>
       </div>
     </div>
   )
