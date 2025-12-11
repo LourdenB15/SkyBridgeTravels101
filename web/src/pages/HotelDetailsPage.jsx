@@ -107,7 +107,7 @@ function HotelDetailsPage() {
           <h1 className="text-2xl font-bold text-dark md:text-3xl">{hotel.name}</h1>
           <button
             onClick={scrollToRooms}
-            className="rounded-full bg-primary px-6 py-2 font-medium text-white transition-colors hover:bg-[#2563EB]"
+            className="cursor-pointer rounded-full bg-primary px-6 py-2 font-medium text-white transition-colors hover:bg-[#2563EB]"
           >
             Reserve
           </button>
