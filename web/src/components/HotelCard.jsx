@@ -11,8 +11,8 @@ function HotelCard({ hotel, guests, checkIn, checkOut }) {
       to={`/hotel/${hotel.id}?${queryParams.toString()}`}
       className="block"
     >
-      <div className="flex h-48 flex-col overflow-hidden rounded-xl bg-white shadow-md transition-shadow hover:shadow-lg sm:flex-row">
-        <div className="h-full w-full shrink-0 sm:w-48 md:w-64">
+      <div className="flex flex-col overflow-hidden rounded-xl bg-white shadow-md transition-shadow hover:shadow-lg sm:h-48 sm:flex-row">
+        <div className="h-40 w-full shrink-0 sm:h-full sm:w-48 md:w-64">
           <img
             src={hotel.images?.[0] || 'https://placehold.co/400x300?text=Hotel'}
             alt={hotel.name}
