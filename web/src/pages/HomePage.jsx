@@ -2,57 +2,79 @@ import SearchBar from '../components/SearchBar'
 
 function HomePage() {
   return (
-    <div>
-      <div className="bg-[#3B82F6] px-4 pb-24 pt-8">
+    <div className="min-h-screen bg-[#f5f5f5]">
+      <div className="bg-gradient-to-br from-[#4e8cff] to-[#3d7ae8] px-4 pb-20 pt-12 md:px-8">
         <div className="mx-auto max-w-7xl">
-          <h1 className="mb-2 text-4xl font-bold text-white">Find your next stay</h1>
-          <p className="mb-8 text-lg text-white/90">Search hotels in Cordova, Cebu</p>
+          <h1 className="mb-2 text-3xl font-semibold text-white md:text-[2.8rem]">
+            Find your next stay
+          </h1>
+          <p className="mb-8 text-base text-white/95 md:text-lg">
+            Search hotels in Cordova, Cebu
+          </p>
           <SearchBar />
         </div>
       </div>
 
-      <div className="px-4 py-12">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="mb-2 text-2xl font-semibold text-dark">Offers</h2>
-          <p className="mb-6 text-gray-text">Promotions, deals, and special offers for you</p>
+      <div className="mx-auto -mt-8 max-w-7xl px-4 pb-8 md:px-8">
+        <div className="rounded-xl bg-white p-6 shadow-sm md:p-8">
+          <h2 className="mb-2 text-2xl font-semibold text-gray-800 md:text-[1.8rem]">
+            Offers
+          </h2>
+          <p className="mb-6 text-gray-600">
+            Promotions, deals, and special offers for you
+          </p>
 
-          <div className="flex gap-6 overflow-x-auto pb-4">
-            <div className="min-w-[320px] flex-shrink-0 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-              <div className="h-40 bg-gradient-to-r from-[#3B82F6] to-[#1E40AF]">
-                <div className="flex h-full flex-col justify-center p-6">
-                  <span className="mb-2 text-sm font-medium text-white/80">Limited Time</span>
-                  <h3 className="text-xl font-bold text-white">20% off weekend stays</h3>
-                  <p className="mt-2 text-sm text-white/90">Book Friday to Sunday and save big</p>
-                </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="cursor-pointer overflow-hidden rounded-xl shadow-md transition-all hover:-translate-y-1 hover:shadow-lg">
+              <div className="min-h-[160px] bg-gradient-to-br from-[#4e8cff] to-[#3d7ae8] p-6 text-white">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide opacity-95">
+                  Limited Time
+                </p>
+                <h3 className="mb-2 text-xl font-semibold md:text-2xl">
+                  20% off weekend stays
+                </h3>
+                <p className="text-sm opacity-95">
+                  Book Friday to Sunday and save big
+                </p>
               </div>
-              <div className="p-4">
-                <p className="text-sm text-gray-text">Valid until December 31, 2024</p>
+              <div className="bg-white px-6 py-4">
+                <p className="text-sm text-gray-500">
+                  Valid until December 31, 2024
+                </p>
               </div>
             </div>
 
-            <div className="min-w-[320px] flex-shrink-0 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-              <div className="h-40 bg-gradient-to-r from-[#22C55E] to-[#16A34A]">
-                <div className="flex h-full flex-col justify-center p-6">
-                  <span className="mb-2 text-sm font-medium text-white/80">Exclusive Deal</span>
-                  <h3 className="text-xl font-bold text-white">Free breakfast included</h3>
-                  <p className="mt-2 text-sm text-white/90">Enjoy complimentary breakfast for 2</p>
-                </div>
+            <div className="cursor-pointer overflow-hidden rounded-xl shadow-md transition-all hover:-translate-y-1 hover:shadow-lg">
+              <div className="min-h-[160px] bg-gradient-to-br from-[#2ecc71] to-[#27ae60] p-6 text-white">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide opacity-95">
+                  Exclusive Deal
+                </p>
+                <h3 className="mb-2 text-xl font-semibold md:text-2xl">
+                  Free breakfast included
+                </h3>
+                <p className="text-sm opacity-95">
+                  Enjoy complimentary breakfast for 2
+                </p>
               </div>
-              <div className="p-4">
-                <p className="text-sm text-gray-text">On select properties</p>
+              <div className="bg-white px-6 py-4">
+                <p className="text-sm text-gray-500">On select properties</p>
               </div>
             </div>
 
-            <div className="min-w-[320px] flex-shrink-0 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-              <div className="h-40 bg-gradient-to-r from-[#F59E0B] to-[#D97706]">
-                <div className="flex h-full flex-col justify-center p-6">
-                  <span className="mb-2 text-sm font-medium text-white/80">Early Bird</span>
-                  <h3 className="text-xl font-bold text-white">Book 30 days ahead</h3>
-                  <p className="mt-2 text-sm text-white/90">Get 15% off on advance bookings</p>
-                </div>
+            <div className="cursor-pointer overflow-hidden rounded-xl shadow-md transition-all hover:-translate-y-1 hover:shadow-lg">
+              <div className="min-h-[160px] bg-gradient-to-br from-[#f39c12] to-[#e67e22] p-6 text-white">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide opacity-95">
+                  Early Bird
+                </p>
+                <h3 className="mb-2 text-xl font-semibold md:text-2xl">
+                  Book 30 days ahead
+                </h3>
+                <p className="text-sm opacity-95">
+                  Get 15% off on advance bookings
+                </p>
               </div>
-              <div className="p-4">
-                <p className="text-sm text-gray-text">Plan your vacation early</p>
+              <div className="bg-white px-6 py-4">
+                <p className="text-sm text-gray-500">Plan your vacation early</p>
               </div>
             </div>
           </div>
