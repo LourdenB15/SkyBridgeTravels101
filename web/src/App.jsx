@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
+import { Toaster } from 'sonner'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
 import HomePage from './pages/HomePage'
@@ -11,6 +12,8 @@ import NotFoundPage from './pages/NotFoundPage'
 
 function App() {
   return (
+    <>
+    <Toaster position="top-center" richColors />
     <Layout>
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -22,6 +25,7 @@ function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Layout>
+    </>
   )
 }
 

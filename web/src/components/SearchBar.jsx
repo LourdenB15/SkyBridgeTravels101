@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 function SearchBar({ initialValues = {} }) {
   const navigate = useNavigate()
@@ -9,10 +10,18 @@ function SearchBar({ initialValues = {} }) {
   const [guests, setGuests] = useState(initialValues.guests || 1)
 
   const handleSearch = () => {
+    if (!checkIn || !checkOut) {
+      toast.error('Please select check-in and check-out dates')
+      return
+    }
+    if (new Date(checkIn) >= new Date(checkOut)) {
+      toast.error('Check-out must be after check-in')
+      return
+    }
     const params = new URLSearchParams()
     if (location) params.set('location', location)
-    if (checkIn) params.set('checkIn', checkIn)
-    if (checkOut) params.set('checkOut', checkOut)
+    params.set('checkIn', checkIn)
+    params.set('checkOut', checkOut)
     params.set('guests', guests)
     navigate(`/search?${params.toString()}`)
   }
