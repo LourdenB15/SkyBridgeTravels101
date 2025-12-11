@@ -5,19 +5,21 @@ import { UnauthorizedError } from '../middlewares/errorHandler.js'
 const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000
 
 const setAuthCookie = (res, token) => {
+  const isProduction = process.env.NODE_ENV === 'production'
   res.cookie('auth_token', token, {
     httpOnly: true,
-    secure: process.env.COOKIE_SECURE === 'true',
-    sameSite: 'lax',
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
     maxAge: COOKIE_MAX_AGE
   })
 }
 
 const clearAuthCookie = (res) => {
+  const isProduction = process.env.NODE_ENV === 'production'
   res.clearCookie('auth_token', {
     httpOnly: true,
-    secure: process.env.COOKIE_SECURE === 'true',
-    sameSite: 'lax'
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax'
   })
 }
 
