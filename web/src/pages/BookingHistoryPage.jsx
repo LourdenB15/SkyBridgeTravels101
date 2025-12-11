@@ -72,7 +72,14 @@ function BookingHistoryPage() {
       case 'pending':
         return bookings.filter(b => b.status === 'pending')
       case 'completed':
-        return bookings.filter(b => b.status === 'completed' || b.status === 'confirmed')
+        return bookings.filter(b => {
+          if (b.status === 'completed') return true
+          if (b.status === 'confirmed') {
+            const checkOut = new Date(b.checkOutDate)
+            return checkOut < now
+          }
+          return false
+        })
       case 'cancelled':
         return bookings.filter(b => b.status === 'cancelled')
       default:

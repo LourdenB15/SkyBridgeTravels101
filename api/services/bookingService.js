@@ -57,6 +57,7 @@ export const getBookingByRef = async (bookingRef) => {
 }
 
 export const getUserBookings = async (clerkUserId) => {
+  await bookingRepository.markCompletedBookings(clerkUserId)
   return bookingRepository.findByUserId(clerkUserId)
 }
 
