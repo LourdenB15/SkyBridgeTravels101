@@ -69,3 +69,25 @@ export const updateBookingStatus = async (id, status) => {
 
   return bookingRepository.updateStatus(id, status)
 }
+
+export const cancelBooking = async (id, clerkUserId) => {
+  const booking = await bookingRepository.findById(id)
+
+  if (!booking) {
+    throw new NotFoundError('Booking not found')
+  }
+
+  if (booking.clerkUserId !== clerkUserId) {
+    throw new NotFoundError('Booking not found')
+  }
+
+  if (booking.status === 'cancelled') {
+    throw new Error('Booking is already cancelled')
+  }
+
+  if (booking.status === 'completed') {
+    throw new Error('Cannot cancel a completed booking')
+  }
+
+  return bookingRepository.updateStatus(id, 'cancelled')
+}

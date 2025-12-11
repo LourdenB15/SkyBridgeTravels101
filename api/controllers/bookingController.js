@@ -41,3 +41,13 @@ export const getUserBookings = async (req, res, next) => {
     next(error)
   }
 }
+
+export const cancelBooking = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const booking = await bookingService.cancelBooking(id, req.auth.userId)
+    res.json(booking)
+  } catch (error) {
+    next(error)
+  }
+}

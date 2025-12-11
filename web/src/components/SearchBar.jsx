@@ -70,7 +70,7 @@ function SearchBar({ initialValues = {} }) {
         </div>
         <button
           onClick={handleSearch}
-          className="col-span-1 flex items-center justify-center gap-2 rounded-lg bg-[#4e8cff] px-8 py-3 font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#3d7ae8] hover:shadow-lg md:col-span-2 lg:col-span-1"
+          className="col-span-1 flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#4e8cff] px-8 py-3 font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#3d7ae8] hover:shadow-lg md:col-span-2 lg:col-span-1"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

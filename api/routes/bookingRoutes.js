@@ -10,5 +10,6 @@ router.post('/', requireAuthentication, validate(createBookingSchema), bookingCo
 router.get('/ref/:bookingRef', bookingController.getBookingByRef)
 router.get('/user', requireAuthentication, bookingController.getUserBookings)
 router.get('/:id', bookingController.getBooking)
+router.patch('/:id/cancel', requireAuthentication, bookingController.cancelBooking)
 
 export default router
