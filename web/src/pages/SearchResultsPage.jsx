@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import SearchBar from '@/components/SearchBar'
 import HotelCard from '@/components/HotelCard'
+import SearchResultsMap from '@/components/SearchResultsMap'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import {
   DropdownMenu,
@@ -73,28 +74,12 @@ function SearchResultsPage() {
         <div className="flex flex-col gap-6 lg:flex-row">
           <div className="lg:w-1/3">
             <div className="sticky top-24 rounded-xl bg-white p-4 shadow-md">
-              <div className="flex h-64 items-center justify-center rounded-lg bg-gray-100">
-                <div className="text-center text-gray-text">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="mx-auto mb-2 h-12 w-12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
-                  <p className="text-sm">Map view</p>
-                  <p className="text-xs">Cordova, Cebu</p>
-                </div>
+              <div className="h-64 rounded-lg overflow-hidden">
+                <SearchResultsMap hotels={hotels} />
               </div>
-              <button className="mt-4 w-full rounded-full border border-dark px-4 py-2 text-sm font-medium text-dark transition-colors hover:bg-gray-100">
-                Show on map
-              </button>
+              <p className="mt-3 text-center text-sm text-gray-text">
+                {hotels.length} {hotels.length === 1 ? 'property' : 'properties'} on map
+              </p>
             </div>
           </div>
 
