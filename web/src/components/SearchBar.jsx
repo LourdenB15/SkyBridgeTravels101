@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
+import { Loader2 } from 'lucide-react'
 
-function SearchBar({ initialValues = {} }) {
+function SearchBar({ initialValues = {}, isLoading = false }) {
   const navigate = useNavigate()
   const [location, setLocation] = useState(initialValues.location || '')
   const [checkIn, setCheckIn] = useState(initialValues.checkIn || '')
@@ -70,22 +71,27 @@ function SearchBar({ initialValues = {} }) {
         </div>
         <button
           onClick={handleSearch}
-          className="col-span-1 flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#4e8cff] px-8 py-3 font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#3d7ae8] hover:shadow-lg md:col-span-2 lg:col-span-1"
+          disabled={isLoading}
+          className="col-span-1 flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#4e8cff] px-8 py-3 font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#3d7ae8] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none md:col-span-2 lg:col-span-1"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.3-4.3" />
-          </svg>
-          Search
+          {isLoading ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
+          )}
+          {isLoading ? 'Searching...' : 'Search'}
         </button>
       </div>
     </div>

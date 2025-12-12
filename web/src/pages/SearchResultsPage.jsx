@@ -56,6 +56,7 @@ function SearchResultsPage() {
               checkOut,
               guests: guests.toString(),
             }}
+            isLoading={loading}
           />
         </div>
       </div>
