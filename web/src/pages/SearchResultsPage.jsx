@@ -12,12 +12,15 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { searchHotels } from '@/services/api'
 
+const HOTELS_PER_PAGE = 8
+
 function SearchResultsPage() {
   const [searchParams] = useSearchParams()
   const [hotels, setHotels] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchLoading, setSearchLoading] = useState(true)
   const [sortBy, setSortBy] = useState('relevance')
+  const [currentPage, setCurrentPage] = useState(1)
   const prevSearchKey = useRef('')
 
   const location = searchParams.get('location') || ''
@@ -30,6 +33,10 @@ function SearchResultsPage() {
   useEffect(() => {
     const isSearchChange = prevSearchKey.current !== searchKey
     prevSearchKey.current = searchKey
+
+    if (isSearchChange) {
+      setCurrentPage(1)
+    }
 
     const fetchHotels = async () => {
       setLoading(true)
@@ -52,7 +59,12 @@ function SearchResultsPage() {
 
   const handleSortChange = (newSort) => {
     setSortBy(newSort)
+    setCurrentPage(1)
   }
+
+  const totalPages = Math.ceil(hotels.length / HOTELS_PER_PAGE)
+  const startIndex = (currentPage - 1) * HOTELS_PER_PAGE
+  const paginatedHotels = hotels.slice(startIndex, startIndex + HOTELS_PER_PAGE)
 
   const breadcrumbLocation = location || 'Cordova, Cebu'
 
@@ -184,17 +196,53 @@ function SearchResultsPage() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-4">
-                {hotels.map((hotel) => (
-                  <HotelCard
-                    key={hotel.id}
-                    hotel={hotel}
-                    guests={guests}
-                    checkIn={checkIn}
-                    checkOut={checkOut}
-                  />
-                ))}
-              </div>
+              <>
+                <div className="space-y-4">
+                  {paginatedHotels.map((hotel) => (
+                    <HotelCard
+                      key={hotel.id}
+                      hotel={hotel}
+                      guests={guests}
+                      checkIn={checkIn}
+                      checkOut={checkOut}
+                    />
+                  ))}
+                </div>
+
+                {totalPages > 1 && (
+                  <div className="mt-6 flex items-center justify-center gap-2">
+                    <button
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-sm font-medium text-dark hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    >
+                      Previous
+                    </button>
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className={`w-10 h-10 rounded-lg text-sm font-medium cursor-pointer ${
+                            currentPage === page
+                              ? 'bg-primary text-white'
+                              : 'border border-gray-300 bg-white text-dark hover:bg-gray-50'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                      className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-sm font-medium text-dark hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
