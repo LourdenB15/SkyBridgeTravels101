@@ -50,7 +50,8 @@ function SearchBar({ initialValues = {}, isLoading = false }) {
             value={checkIn}
             min={today}
             onChange={(e) => setCheckIn(e.target.value)}
-            className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-800 transition-all focus:border-[#4e8cff] focus:outline-none focus:ring-2 focus:ring-[#4e8cff]/10"
+            onClick={(e) => e.target.showPicker()}
+            className="w-full cursor-pointer rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-800 transition-all focus:border-[#4e8cff] focus:outline-none focus:ring-2 focus:ring-[#4e8cff]/10"
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -60,7 +61,8 @@ function SearchBar({ initialValues = {}, isLoading = false }) {
             value={checkOut}
             min={minCheckOut}
             onChange={(e) => setCheckOut(e.target.value)}
-            className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-800 transition-all focus:border-[#4e8cff] focus:outline-none focus:ring-2 focus:ring-[#4e8cff]/10"
+            onClick={(e) => e.target.showPicker()}
+            className="w-full cursor-pointer rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-800 transition-all focus:border-[#4e8cff] focus:outline-none focus:ring-2 focus:ring-[#4e8cff]/10"
           />
         </div>
         <div className="flex flex-col gap-2">
