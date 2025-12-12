@@ -125,3 +125,23 @@ export const changePassword = async (req, res, next) => {
     next(error)
   }
 }
+
+export const deleteAccount = async (req, res, next) => {
+  try {
+    const token = req.cookies?.auth_token
+    if (!token) {
+      throw new UnauthorizedError('Authentication required')
+    }
+
+    const decoded = verifyToken(token)
+    const { password } = req.body
+    const result = await authService.deleteAccount(decoded.userId, password)
+    clearAuthCookie(res)
+    res.status(200).json(result)
+  } catch (error) {
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+      return next(new UnauthorizedError('Invalid or expired token'))
+    }
+    next(error)
+  }
+}

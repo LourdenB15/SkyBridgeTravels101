@@ -1,14 +1,20 @@
 import prisma from '../utils/prisma.js'
 
 export const findByEmail = async (email) => {
-  return prisma.user.findUnique({
-    where: { email: email.toLowerCase() }
+  return prisma.user.findFirst({
+    where: {
+      email: email.toLowerCase(),
+      deletedAt: null
+    }
   })
 }
 
 export const findById = async (id) => {
-  return prisma.user.findUnique({
-    where: { id }
+  return prisma.user.findFirst({
+    where: {
+      id,
+      deletedAt: null
+    }
   })
 }
 
@@ -16,7 +22,8 @@ export const findByResetToken = async (resetToken) => {
   return prisma.user.findFirst({
     where: {
       resetToken,
-      resetTokenExpiry: { gt: new Date() }
+      resetTokenExpiry: { gt: new Date() },
+      deletedAt: null
     }
   })
 }
@@ -59,6 +66,17 @@ export const updateProfile = async (id, data) => {
     data: {
       firstName: data.firstName,
       lastName: data.lastName
+    }
+  })
+}
+
+export const deleteUser = async (id) => {
+  const timestamp = Date.now()
+  return prisma.user.update({
+    where: { id },
+    data: {
+      deletedAt: new Date(),
+      email: `deleted_${timestamp}_${id}`
     }
   })
 }

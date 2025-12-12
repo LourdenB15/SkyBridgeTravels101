@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
-import { changePassword } from '@/services/authApi'
+import { changePassword, deleteAccount } from '@/services/authApi'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { User, Loader2, KeyRound, Eye, EyeOff, Check, Circle } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog'
+import { User, Loader2, KeyRound, Eye, EyeOff, Check, Circle, Trash2 } from 'lucide-react'
 
 function ProfileSettingsPage() {
   const { user, updateProfile } = useAuth()
@@ -25,6 +34,12 @@ function ProfileSettingsPage() {
   const [passwordError, setPasswordError] = useState('')
   const [passwordSuccess, setPasswordSuccess] = useState('')
   const [passwordLoading, setPasswordLoading] = useState(false)
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [deletePassword, setDeletePassword] = useState('')
+  const [showDeletePassword, setShowDeletePassword] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
+  const [deleteLoading, setDeleteLoading] = useState(false)
 
   useEffect(() => {
     if (user) {
@@ -92,6 +107,27 @@ function ProfileSettingsPage() {
     } finally {
       setPasswordLoading(false)
     }
+  }
+
+  const handleDeleteAccount = async () => {
+    setDeleteError('')
+    setDeleteLoading(true)
+
+    try {
+      await deleteAccount(deletePassword)
+      navigate('/')
+      window.location.reload()
+    } catch (err) {
+      setDeleteError(err.response?.data?.error || 'Failed to delete account')
+    } finally {
+      setDeleteLoading(false)
+    }
+  }
+
+  const resetDeleteDialog = () => {
+    setDeletePassword('')
+    setShowDeletePassword(false)
+    setDeleteError('')
   }
 
   return (
@@ -195,7 +231,7 @@ function ProfileSettingsPage() {
           </form>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
           <div className="flex items-center gap-3 mb-6">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
               <KeyRound className="h-6 w-6 text-primary" />
@@ -337,6 +373,98 @@ function ProfileSettingsPage() {
               </Button>
             </div>
           </form>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-red-200">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50">
+              <Trash2 className="h-6 w-6 text-red-500" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-dark">Delete Account</h2>
+              <p className="text-sm text-gray-text">Permanently delete your account and all data</p>
+            </div>
+          </div>
+
+          <p className="text-sm text-gray-600 mb-4">
+            Once you delete your account, there is no going back. All your data, including bookings and personal information, will be permanently removed.
+          </p>
+
+          <Dialog open={deleteDialogOpen} onOpenChange={(open) => {
+            setDeleteDialogOpen(open)
+            if (!open) resetDeleteDialog()
+          }}>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="cursor-pointer border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700"
+              >
+                Delete Account
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-white">
+              <DialogHeader>
+                <DialogTitle className="text-red-600">Delete Account</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. Please enter your password to confirm.
+                </DialogDescription>
+              </DialogHeader>
+
+              {deleteError && (
+                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+                  {deleteError}
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <label htmlFor="deletePassword" className="block text-sm font-medium text-gray-700">
+                  Password
+                </label>
+                <div className="relative">
+                  <Input
+                    id="deletePassword"
+                    type={showDeletePassword ? 'text' : 'password'}
+                    placeholder="Enter your password"
+                    value={deletePassword}
+                    onChange={(e) => setDeletePassword(e.target.value)}
+                    className="h-11 pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowDeletePassword(!showDeletePassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showDeletePassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setDeleteDialogOpen(false)}
+                  disabled={deleteLoading}
+                  className="cursor-pointer"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleDeleteAccount}
+                  disabled={deleteLoading || !deletePassword}
+                  className="cursor-pointer bg-red-600 hover:bg-red-700 text-white"
+                >
+                  {deleteLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Deleting...
+                    </>
+                  ) : (
+                    'Delete Account'
+                  )}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>

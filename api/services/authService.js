@@ -129,3 +129,19 @@ export const changePassword = async (userId, currentPassword, newPassword) => {
 
   return { message: 'Password changed successfully' }
 }
+
+export const deleteAccount = async (userId, password) => {
+  const user = await userRepo.findById(userId)
+  if (!user) {
+    throw new NotFoundError('User not found')
+  }
+
+  const isValidPassword = await comparePassword(password, user.password)
+  if (!isValidPassword) {
+    throw new UnauthorizedError('Password is incorrect')
+  }
+
+  await userRepo.deleteUser(userId)
+
+  return { message: 'Account deleted successfully' }
+}
