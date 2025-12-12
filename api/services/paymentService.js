@@ -1,6 +1,7 @@
-import { Invoice } from 'xendit-node'
+import { Invoice, Refund } from 'xendit-node'
 
 let invoiceClient = null
+let refundClient = null
 
 const getInvoiceClient = () => {
   if (!invoiceClient) {
@@ -9,6 +10,15 @@ const getInvoiceClient = () => {
     })
   }
   return invoiceClient
+}
+
+const getRefundClient = () => {
+  if (!refundClient) {
+    refundClient = new Refund({
+      secretKey: process.env.XENDIT_SECRET_KEY
+    })
+  }
+  return refundClient
 }
 
 const FRONTEND_URL = process.env.CORS_ORIGIN || 'http://localhost:5173'
@@ -47,5 +57,22 @@ export const getInvoice = async (invoiceId) => {
     status: invoice.status,
     amount: invoice.amount,
     paidAt: invoice.paidAt
+  }
+}
+
+export const createRefund = async ({ invoiceId, amount, reason }) => {
+  const refund = await getRefundClient().createRefund({
+    data: {
+      invoiceId,
+      amount,
+      reason: reason || 'REQUESTED_BY_CUSTOMER'
+    }
+  })
+
+  return {
+    refundId: refund.id,
+    invoiceId: refund.invoiceId,
+    amount: refund.amount,
+    status: refund.status
   }
 }

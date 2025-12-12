@@ -1,4 +1,5 @@
 import * as bookingRepository from '../repositories/bookingRepository.js'
+import { createRefund } from './paymentService.js'
 import { NotFoundError } from '../middlewares/errorHandler.js'
 
 const BOOKING_REF_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
@@ -88,6 +89,14 @@ export const cancelBooking = async (id, userId) => {
 
   if (booking.status === 'completed') {
     throw new Error('Cannot cancel a completed booking')
+  }
+
+  if (booking.status === 'confirmed' && booking.paymentId) {
+    await createRefund({
+      invoiceId: booking.paymentId,
+      amount: Number(booking.totalPrice),
+      reason: 'REQUESTED_BY_CUSTOMER'
+    })
   }
 
   return bookingRepository.updateStatus(id, 'cancelled')
