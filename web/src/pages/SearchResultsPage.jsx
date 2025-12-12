@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import SearchBar from '@/components/SearchBar'
 import HotelCard from '@/components/HotelCard'
@@ -16,16 +16,26 @@ function SearchResultsPage() {
   const [searchParams] = useSearchParams()
   const [hotels, setHotels] = useState([])
   const [loading, setLoading] = useState(true)
+  const [searchLoading, setSearchLoading] = useState(true)
   const [sortBy, setSortBy] = useState('relevance')
+  const prevSearchKey = useRef('')
 
   const location = searchParams.get('location') || ''
   const checkIn = searchParams.get('checkIn') || ''
   const checkOut = searchParams.get('checkOut') || ''
   const guests = parseInt(searchParams.get('guests')) || 1
 
+  const searchKey = `${location}-${checkIn}-${checkOut}-${guests}`
+
   useEffect(() => {
+    const isSearchChange = prevSearchKey.current !== searchKey
+    prevSearchKey.current = searchKey
+
     const fetchHotels = async () => {
       setLoading(true)
+      if (isSearchChange) {
+        setSearchLoading(true)
+      }
       try {
         const data = await searchHotels(guests, sortBy, location)
         setHotels(data)
@@ -34,10 +44,11 @@ function SearchResultsPage() {
         setHotels([])
       } finally {
         setLoading(false)
+        setSearchLoading(false)
       }
     }
     fetchHotels()
-  }, [guests, sortBy, location])
+  }, [guests, sortBy, location, searchKey])
 
   const handleSortChange = (newSort) => {
     setSortBy(newSort)
@@ -56,7 +67,7 @@ function SearchResultsPage() {
               checkOut,
               guests: guests.toString(),
             }}
-            isLoading={loading}
+            isLoading={searchLoading}
           />
         </div>
       </div>
@@ -93,7 +104,15 @@ function SearchResultsPage() {
 
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-dark hover:bg-gray-50">
-                  Sort: {sortBy === 'relevance' ? 'Relevance' : 'Price (low to high)'}
+                  Sort: {
+                    {
+                      'relevance': 'Relevance',
+                      'price-asc': 'Price (low to high)',
+                      'price-desc': 'Price (high to low)',
+                      'name-asc': 'Name (A-Z)',
+                      'name-desc': 'Name (Z-A)'
+                    }[sortBy]
+                  }
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4"
@@ -115,10 +134,28 @@ function SearchResultsPage() {
                     Relevance
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => handleSortChange('price')}
-                    className={sortBy === 'price' ? 'bg-gray-100' : ''}
+                    onClick={() => handleSortChange('price-asc')}
+                    className={sortBy === 'price-asc' ? 'bg-gray-100' : ''}
                   >
                     Price (low to high)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleSortChange('price-desc')}
+                    className={sortBy === 'price-desc' ? 'bg-gray-100' : ''}
+                  >
+                    Price (high to low)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleSortChange('name-asc')}
+                    className={sortBy === 'name-asc' ? 'bg-gray-100' : ''}
+                  >
+                    Name (A-Z)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleSortChange('name-desc')}
+                    className={sortBy === 'name-desc' ? 'bg-gray-100' : ''}
+                  >
+                    Name (Z-A)
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
