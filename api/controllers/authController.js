@@ -88,3 +88,21 @@ export const me = async (req, res, next) => {
     next(error)
   }
 }
+
+export const updateProfile = async (req, res, next) => {
+  try {
+    const token = req.cookies?.auth_token
+    if (!token) {
+      throw new UnauthorizedError('Authentication required')
+    }
+
+    const decoded = verifyToken(token)
+    const user = await authService.updateProfile(decoded.userId, req.body)
+    res.status(200).json({ user })
+  } catch (error) {
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+      return next(new UnauthorizedError('Invalid or expired token'))
+    }
+    next(error)
+  }
+}

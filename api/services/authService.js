@@ -96,3 +96,19 @@ export const getCurrentUser = async (userId) => {
     createdAt: user.createdAt
   }
 }
+
+export const updateProfile = async (userId, data) => {
+  const user = await userRepo.findById(userId)
+  if (!user) {
+    throw new NotFoundError('User not found')
+  }
+
+  const updatedUser = await userRepo.updateProfile(userId, data)
+
+  return {
+    id: updatedUser.id,
+    email: updatedUser.email,
+    firstName: updatedUser.firstName,
+    lastName: updatedUser.lastName
+  }
+}

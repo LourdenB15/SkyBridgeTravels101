@@ -14,6 +14,7 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
+import ProfileSettingsPage from './pages/ProfileSettingsPage'
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/booking/:hotelId/:roomId" element={<Layout><ProtectedRoute><BookingPage /></ProtectedRoute></Layout>} />
         <Route path="/confirmation/:bookingRef" element={<Layout><ConfirmationPage /></Layout>} />
         <Route path="/bookings" element={<Layout><ProtectedRoute><BookingHistoryPage /></ProtectedRoute></Layout>} />
+        <Route path="/profile" element={<Layout><ProtectedRoute><ProfileSettingsPage /></ProtectedRoute></Layout>} />
         <Route path="*" element={<Layout><NotFoundPage /></Layout>} />
       </Routes>
     </AuthProvider>

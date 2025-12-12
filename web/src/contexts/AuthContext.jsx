@@ -41,13 +41,20 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
+  const updateProfile = async (firstName, lastName) => {
+    const response = await authApi.updateProfile(firstName, lastName)
+    setUser(response.user)
+    return response
+  }
+
   const value = {
     user,
     loading,
     isAuthenticated,
     login,
     register,
-    logout
+    logout,
+    updateProfile
   }
 
   return (

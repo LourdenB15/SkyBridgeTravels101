@@ -49,4 +49,12 @@ export async function getCurrentUser() {
   return response.data
 }
 
+export async function updateProfile(firstName, lastName) {
+  const response = await authApi.put('/auth/profile', {
+    firstName,
+    lastName
+  })
+  return response.data
+}
+
 export default authApi
