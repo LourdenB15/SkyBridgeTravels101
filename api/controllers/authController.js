@@ -106,3 +106,22 @@ export const updateProfile = async (req, res, next) => {
     next(error)
   }
 }
+
+export const changePassword = async (req, res, next) => {
+  try {
+    const token = req.cookies?.auth_token
+    if (!token) {
+      throw new UnauthorizedError('Authentication required')
+    }
+
+    const decoded = verifyToken(token)
+    const { currentPassword, newPassword } = req.body
+    const result = await authService.changePassword(decoded.userId, currentPassword, newPassword)
+    res.status(200).json(result)
+  } catch (error) {
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+      return next(new UnauthorizedError('Invalid or expired token'))
+    }
+    next(error)
+  }
+}

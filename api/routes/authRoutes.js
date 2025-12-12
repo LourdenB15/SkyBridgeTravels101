@@ -6,7 +6,8 @@ import {
   loginSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
-  updateProfileSchema
+  updateProfileSchema,
+  changePasswordSchema
 } from '../utils/validationSchemas.js'
 
 const router = Router()
@@ -18,5 +19,6 @@ router.post('/forgot-password', validate(forgotPasswordSchema), authController.f
 router.post('/reset-password', validate(resetPasswordSchema), authController.resetPassword)
 router.get('/me', authController.me)
 router.put('/profile', validate(updateProfileSchema), authController.updateProfile)
+router.put('/change-password', validate(changePasswordSchema), authController.changePassword)
 
 export default router

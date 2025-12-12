@@ -112,3 +112,20 @@ export const updateProfile = async (userId, data) => {
     lastName: updatedUser.lastName
   }
 }
+
+export const changePassword = async (userId, currentPassword, newPassword) => {
+  const user = await userRepo.findById(userId)
+  if (!user) {
+    throw new NotFoundError('User not found')
+  }
+
+  const isValidPassword = await comparePassword(currentPassword, user.password)
+  if (!isValidPassword) {
+    throw new UnauthorizedError('Current password is incorrect')
+  }
+
+  const hashedPassword = await hashPassword(newPassword)
+  await userRepo.updatePassword(userId, hashedPassword)
+
+  return { message: 'Password changed successfully' }
+}

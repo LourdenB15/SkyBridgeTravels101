@@ -3,6 +3,7 @@ import { Toaster } from 'sonner'
 import { AuthProvider } from './contexts/AuthContext'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
+import PublicRoute from './components/PublicRoute'
 import HomePage from './pages/HomePage'
 import SearchResultsPage from './pages/SearchResultsPage'
 import HotelDetailsPage from './pages/HotelDetailsPage'
@@ -21,10 +22,10 @@ function App() {
     <AuthProvider>
       <Toaster position="top-center" richColors />
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+        <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+        <Route path="/forgot-password" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
+        <Route path="/reset-password" element={<PublicRoute><ResetPasswordPage /></PublicRoute>} />
         <Route path="/" element={<Layout><HomePage /></Layout>} />
         <Route path="/search" element={<Layout><SearchResultsPage /></Layout>} />
         <Route path="/hotel/:id" element={<Layout><HotelDetailsPage /></Layout>} />

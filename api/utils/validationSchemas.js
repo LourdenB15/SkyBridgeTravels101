@@ -41,3 +41,8 @@ export const updateProfileSchema = z.object({
   firstName: z.string().min(1, { message: 'First name is required' }),
   lastName: z.string().min(1, { message: 'Last name is required' })
 })
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, { message: 'Current password is required' }),
+  newPassword: z.string().min(8, { message: 'New password must be at least 8 characters' })
+})
