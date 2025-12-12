@@ -10,6 +10,9 @@ function SearchBar({ initialValues = {}, isLoading = false }) {
   const [checkOut, setCheckOut] = useState(initialValues.checkOut || '')
   const [guests, setGuests] = useState(initialValues.guests || 1)
 
+  const today = new Date().toISOString().split('T')[0]
+  const minCheckOut = checkIn || today
+
   const handleSearch = () => {
     if (!checkIn || !checkOut) {
       toast.error('Please select check-in and check-out dates')
@@ -45,6 +48,7 @@ function SearchBar({ initialValues = {}, isLoading = false }) {
           <input
             type="date"
             value={checkIn}
+            min={today}
             onChange={(e) => setCheckIn(e.target.value)}
             className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-800 transition-all focus:border-[#4e8cff] focus:outline-none focus:ring-2 focus:ring-[#4e8cff]/10"
           />
@@ -54,6 +58,7 @@ function SearchBar({ initialValues = {}, isLoading = false }) {
           <input
             type="date"
             value={checkOut}
+            min={minCheckOut}
             onChange={(e) => setCheckOut(e.target.value)}
             className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-800 transition-all focus:border-[#4e8cff] focus:outline-none focus:ring-2 focus:ring-[#4e8cff]/10"
           />
