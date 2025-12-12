@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { useUser, useClerk, SignInButton } from '@clerk/clerk-react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
 
 function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const location = useLocation()
-  const { isSignedIn, user, isLoaded } = useUser()
-  const { signOut } = useClerk()
+  const navigate = useNavigate()
+  const { isAuthenticated, user, loading, logout } = useAuth()
   const dropdownRef = useRef(null)
   const mobileMenuRef = useRef(null)
   const hamburgerRef = useRef(null)
@@ -22,10 +22,11 @@ function Header() {
     setMobileMenuOpen(false)
   }
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     setDropdownOpen(false)
     closeMobileMenu()
-    signOut()
+    await logout()
+    navigate('/')
   }
 
   useEffect(() => {
@@ -47,7 +48,7 @@ function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const displayName = user?.username || user?.firstName || 'User'
+  const displayName = user?.firstName || 'User'
   const initial = displayName.charAt(0).toUpperCase()
 
   return (
@@ -132,7 +133,7 @@ function Header() {
           >
             My Bookings
           </Link>
-          {isSignedIn && (
+          {isAuthenticated && (
             <button
               onClick={handleSignOut}
               className="rounded-lg px-4 py-2 text-left text-[0.95rem] font-medium text-white/80 transition-all hover:bg-white/10 hover:text-white md:hidden"
@@ -143,9 +144,9 @@ function Header() {
         </div>
 
         <div className="order-3 flex items-center justify-self-end md:order-none">
-          {!isLoaded ? (
+          {loading ? (
             <div className="h-9 w-9 animate-pulse rounded-full bg-white/20 md:h-10 md:w-24 md:rounded-lg" />
-          ) : isSignedIn ? (
+          ) : isAuthenticated ? (
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -154,17 +155,9 @@ function Header() {
                 <span className="hidden text-[0.95rem] font-medium text-white lg:block">
                   {displayName}
                 </span>
-                {user.imageUrl ? (
-                  <img
-                    src={user.imageUrl}
-                    alt={displayName}
-                    className="h-[38px] w-[38px] rounded-full border-2 border-white/30 object-cover"
-                  />
-                ) : (
-                  <div className="flex h-[38px] w-[38px] items-center justify-center rounded-full border-2 border-white/30 bg-white text-[0.95rem] font-bold text-[#4e8cff]">
-                    {initial}
-                  </div>
-                )}
+                <div className="flex h-[38px] w-[38px] items-center justify-center rounded-full border-2 border-white/30 bg-white text-[0.95rem] font-bold text-[#4e8cff]">
+                  {initial}
+                </div>
               </button>
 
               {dropdownOpen && (
@@ -179,12 +172,13 @@ function Header() {
               )}
             </div>
           ) : (
-            <SignInButton mode="modal">
-              <button className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white/30 bg-white text-[#4e8cff] shadow-sm transition-all hover:bg-white/95 hover:shadow-md md:h-auto md:w-auto md:rounded-lg md:border-0 md:px-6 md:py-2.5 md:hover:-translate-y-0.5">
-                <span className="text-lg md:hidden">👤</span>
-                <span className="hidden text-[0.95rem] font-semibold md:block">Sign In</span>
-              </button>
-            </SignInButton>
+            <Link
+              to="/login"
+              className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white/30 bg-white text-[#4e8cff] shadow-sm transition-all hover:bg-white/95 hover:shadow-md md:h-auto md:w-auto md:rounded-lg md:border-0 md:px-6 md:py-2.5 md:hover:-translate-y-0.5"
+            >
+              <span className="text-lg md:hidden">👤</span>
+              <span className="hidden text-[0.95rem] font-semibold md:block">Sign In</span>
+            </Link>
           )}
         </div>
       </div>

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useAuth } from '@clerk/clerk-react'
 import { CalendarX2 } from 'lucide-react'
 import { getUserBookings, cancelBooking } from '@/services/api'
 import LoadingSpinner from '@/components/LoadingSpinner'
@@ -15,7 +14,6 @@ const TABS = [
 ]
 
 function BookingHistoryPage() {
-  const { getToken } = useAuth()
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -26,12 +24,7 @@ function BookingHistoryPage() {
     try {
       setLoading(true)
       setError(null)
-      const token = await getToken()
-      if (!token) {
-        setError('Authentication required')
-        return
-      }
-      const data = await getUserBookings(token)
+      const data = await getUserBookings()
       setBookings(data)
     } catch (err) {
       setError('Failed to load bookings')
@@ -42,13 +35,12 @@ function BookingHistoryPage() {
 
   useEffect(() => {
     fetchBookings()
-  }, [getToken])
+  }, [])
 
   const handleCancelBooking = async (bookingId) => {
     try {
       setCancellingId(bookingId)
-      const token = await getToken()
-      await cancelBooking(bookingId, token)
+      await cancelBooking(bookingId)
       setBookings(prev =>
         prev.map(b => b.id === bookingId ? { ...b, status: 'cancelled' } : b)
       )
