@@ -59,10 +59,10 @@ function BookingHistoryPage() {
       case 'upcoming':
         return bookings.filter(b => {
           const checkIn = new Date(b.checkInDate)
-          return checkIn >= now && b.status !== 'cancelled'
+          return checkIn >= now && b.status === 'confirmed'
         })
       case 'pending':
-        return bookings.filter(b => b.status === 'pending')
+        return bookings.filter(b => ['pending', 'expired', 'failed'].includes(b.status))
       case 'completed':
         return bookings.filter(b => {
           if (b.status === 'completed') return true
@@ -95,12 +95,12 @@ function BookingHistoryPage() {
         <h1 className="text-3xl font-bold text-dark mb-6">My Bookings</h1>
 
         <div className="border-b border-gray-200 mb-6">
-          <nav className="flex gap-8">
+          <nav className="flex gap-4 sm:gap-8 overflow-x-auto">
             {TABS.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`pb-3 text-sm font-medium transition-colors relative cursor-pointer ${
+                className={`pb-3 text-xs sm:text-sm font-medium transition-colors relative cursor-pointer whitespace-nowrap ${
                   activeTab === tab.id
                     ? 'text-primary'
                     : 'text-gray-text hover:text-dark'

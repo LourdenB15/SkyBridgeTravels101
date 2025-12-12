@@ -1,6 +1,19 @@
-import { MapPin } from 'lucide-react'
+import { useState } from 'react'
+import { MapPin, CreditCard, Loader2 } from 'lucide-react'
+import { createPaymentInvoice } from '@/services/api'
 
 function BookingHistoryCard({ booking, onCancel, isCancelling }) {
+  const [isRetrying, setIsRetrying] = useState(false)
+
+  const handleRetryPayment = async () => {
+    try {
+      setIsRetrying(true)
+      const paymentResult = await createPaymentInvoice(booking.id)
+      window.location.href = paymentResult.invoiceUrl
+    } catch (err) {
+      setIsRetrying(false)
+    }
+  }
   const formatDateRange = (checkIn, checkOut) => {
     const inDate = new Date(checkIn)
     const outDate = new Date(checkOut)
@@ -89,7 +102,9 @@ function BookingHistoryCard({ booking, onCancel, isCancelling }) {
   const displayStatus = (booking.status === 'confirmed' && isPast) ? 'completed' : booking.status
   const diffTime = checkInDate - now
   const daysUntilCheckIn = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-  const canCancel = (booking.status === 'pending' || (booking.status === 'confirmed' && isUpcoming)) && daysUntilCheckIn >= 7
+  const canCancel =
+    (['pending', 'expired', 'failed'].includes(booking.status) && isUpcoming) ||
+    (booking.status === 'confirmed' && isUpcoming && daysUntilCheckIn >= 7)
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -152,20 +167,41 @@ function BookingHistoryCard({ booking, onCancel, isCancelling }) {
                 {formatPrice(booking.totalPrice)}
               </p>
             </div>
-            {canCancel && (
-              <button
-                onClick={() => onCancel(booking.id)}
-                disabled={isCancelling}
-                className="px-6 py-2 border border-red-500 text-red-500 rounded-lg font-medium hover:bg-red-50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isCancelling ? 'Cancelling...' : 'Cancel'}
-              </button>
-            )}
-            {(booking.status === 'pending' || booking.status === 'confirmed') && isUpcoming && daysUntilCheckIn < 7 && (
-              <p className="text-sm text-gray-500 italic">
-                Cannot cancel within 7 days of check-in
-              </p>
-            )}
+            <div className="flex items-center gap-3">
+              {['pending', 'expired', 'failed'].includes(booking.status) && (
+                <button
+                  onClick={handleRetryPayment}
+                  disabled={isRetrying}
+                  className="px-6 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {isRetrying ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <CreditCard className="w-4 h-4" />
+                      Retry Payment
+                    </>
+                  )}
+                </button>
+              )}
+              {canCancel && (
+                <button
+                  onClick={() => onCancel(booking.id)}
+                  disabled={isCancelling}
+                  className="px-6 py-2 border border-red-500 text-red-500 rounded-lg font-medium hover:bg-red-50 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isCancelling ? 'Cancelling...' : 'Cancel'}
+                </button>
+              )}
+              {booking.status === 'confirmed' && isUpcoming && daysUntilCheckIn < 7 && (
+                <p className="text-sm text-gray-500 italic">
+                  Cannot cancel within 7 days of check-in
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>
