@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Plane } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
 function Header() {
@@ -81,7 +82,7 @@ function Header() {
           to="/"
           className="order-2 flex items-center gap-3 justify-self-center transition-transform hover:scale-[1.02] md:order-none md:justify-self-auto"
         >
-          <span className="text-2xl md:text-3xl">✈️</span>
+          <Plane className="h-7 w-7 text-white md:h-8 md:w-8" />
           <div className="flex flex-col">
             <span className="text-lg font-bold leading-tight text-white md:text-[1.3rem]">
               SkyBridge Travels
